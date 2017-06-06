@@ -17,13 +17,13 @@ The `CSI` (Coastal Salinity Index) package is designed to import salinity data i
 - Calculate CSI values and salinity departures from normal,
 - Produce CSV and graphical outputs.
 
-## Vignette Info
+## Coastal Salinity Index (CSI) Info
 
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
+The Coastal Salinity Index (CSI) calculates the excursion of a particular month from the typical salinity values for that month. Negative values indicate months of lower salinity than historically typical for that calendar month (e.g., wetter); positive values indicate months with higher salinities than typical (e.g., drier). CSI values remove the absolute local components of the measured salinities, and produce relative values that can more usefully be compared between different localities.
 
-## Styles
+## Output
 
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
+The `CSI` template includes production of a basic CSV theme. To override this theme you can specify your own CSS in the document metadata as follows:
 
     output: 
       rmarkdown::html_vignette:
@@ -54,7 +54,6 @@ You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footn
 knitr::kable(head(mtcars, 10))
 ```
 
-Also a quote using `>`:
 
 > "He who gives up [code] safety for [code] speed deserves neither."
 ([via](https://twitter.com/hadleywickham/status/504368538874703872))
