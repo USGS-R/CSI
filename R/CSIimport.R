@@ -1,4 +1,4 @@
-#' @title CSIimport
+#' @title Import files for CSI calculation
 #'
 #' @description Read in salinity values file.
 #'
