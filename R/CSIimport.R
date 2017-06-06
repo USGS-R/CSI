@@ -20,7 +20,6 @@ CSIimport <- function(file, interval="daily", scale=24) {
   sal<-read.csv(file)
   num_months<-dim(sal)[1]  # number of months in data set
   num_sites<-dim(sal)[2]-2 # number of sites in data set
-  scale<-24                # range of months over which to compare: e.g., 1 to 24 months
   csi<-array(NA,c(num_months,scale,num_sites)) # initialize array for CSI values
   for(j in 3:dim(sal)[2]) { # loop for each site
     x<-matrix(NA,length(which(!is.na(sal[,j]))),scale) # temp matrix to hold site CSIs
