@@ -15,9 +15,18 @@
 #'
 #' @examples
 #' csi <- CSIimport("~/Desktop/R/CSI_source/Monthly_Waccamaw_LittleBlack_Rivers.csv")
-
-CSIimport <- function(file, interval="daily", scale=24) {
+#'
+CSIimport <- function(file, interval=c("daily","hourly","15-minute","60-minute","irregular","interval"), scale=24) {
+  if(!(length(file) == 1) || !is.character(file))
+    stop("file must be a single character string")
+  interval<-match.arg(interval)
+  if(!(length(scale) == 1) || is.na(as.integer(scale)) || as.integer(scale) <= 0)
+    stop("scale must be a single positive integer")
+  scale<-as.integer(scale)
   sal<-read.csv(file)
+  if(!any(names(sal) %in% c('Year','year','YEAR')) || !any(names(sal) %in% c('Month','month','MONTH')))
+    stop("file must be a CSV with columns 'Year', 'Month', and columns for each site")
+
   num_months<-dim(sal)[1]  # number of months in data set
   num_sites<-dim(sal)[2]-2 # number of sites in data set
   csi<-array(NA,c(num_months,scale,num_sites)) # initialize array for CSI values

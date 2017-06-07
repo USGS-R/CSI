@@ -2,9 +2,10 @@
 % Please edit documentation in R/CSIimport.R
 \name{CSIimport}
 \alias{CSIimport}
-\title{CSIimport}
+\title{Import files for CSI calculation}
 \usage{
-CSIimport(file, interval = "daily", scale = 24)
+CSIimport(file, interval = c("daily", "hourly", "15-minute", "60-minute",
+  "irregular", "interval"), scale = 24)
 }
 \arguments{
 \item{file}{character The file to import.}
@@ -21,4 +22,5 @@ Read in salinity values file.
 }
 \examples{
 csi <- CSIimport("~/Desktop/R/CSI_source/Monthly_Waccamaw_LittleBlack_Rivers.csv")
+
 }
