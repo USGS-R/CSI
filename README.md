@@ -17,6 +17,8 @@ Reporting bugs
 
 Please consider reporting bugs and sending questions to <bmccloskey@usgs.gov>.
 
+[![Coverage Status](https://coveralls.io/repos/github/USGS-R/CSI/badge.svg?branch=master)](https://coveralls.io/github/USGS-R/CSI?branch=master) [![Build Status](https://travis-ci.org/USGS-R/CSI.svg?branch=master)](https://travis-ci.org/USGS-R/CSI)
+
 Disclaimer
 ----------
 
