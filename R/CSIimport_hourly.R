@@ -22,12 +22,13 @@ CSIimport_hourly <- function(file) {
     stop("file must be a CSV with columns 'Year', 'Month', 'Day', 'Hour', (or single column 'Time' = YYYY-MM-DD HH:mm:ss) and columns for each site")
   if(any(names(sal) %in% c('Time','time','TIME'))) {
     sal$Date<-as.Date(sal$Time)
-    sal$Month<-months(sal$Date)
+    sal$Month<-format(sal$Date,format="%m")
     sal$Year<-format(sal$Date,format="%Y")
   }
   sal<-group_by(sal,Year,Month)
   sal<-summarize_all(sal,mean,na.rm=T)
   sal<-sal[,-which(names(sal)=='Date' || names(sal)=='Time')]
+  sal<-as.data.frame(sal)
 
   return(sal)
 }

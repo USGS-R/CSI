@@ -24,12 +24,13 @@ CSIimport_daily <- function(file) {
   Year<-Month<-'dplyr'
   if(any(names(sal) %in% c('Date','date','DATE'))) {
     sal$Date<-as.Date(sal$Date)
-    sal$Month<-months(sal$Date)
+    sal$Month<-format(sal$Date,format="%m")
     sal$Year<-format(sal$Date,format="%Y")
   }
   sal<-group_by(sal,Year,Month)
   sal<-summarize_all(sal,mean,na.rm=T)
   sal<-sal[,-which(names(sal)=='Date')]
+  sal<-as.data.frame(sal)
 
   return(sal)
 }
