@@ -2,7 +2,9 @@
 
 export(CSIimport)
 export(CSIimport_24hour)
+export(CSIimport_60minute)
 export(CSIimport_daily)
+export(CSIimport_hourly)
 export(CSIimport_monthly)
 importFrom(dplyr,group_by)
 importFrom(dplyr,summarize_all)
