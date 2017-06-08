@@ -14,21 +14,11 @@
 #' @examples
 #' csi <- CSIimport("~/Desktop/R/CSI_source/Monthly_Waccamaw_LittleBlack_Rivers.csv")
 #'
-CSIimport <- function(file, interval=c("monthly","daily","hourly","15-minute","60-minute","irregular","interval"), scale=24) {
+CSIimport <- function(file, interval=c("monthly","daily","hourly","15-minute","60-minute","irregular","interval")) {
   if(!(length(file) == 1) || !is.character(file))
     stop("file must be a single character string")
   interval<-match.arg(interval)
-  if(!(length(scale) == 1) || is.na(as.integer(scale)) || as.integer(scale) <= 0)
-    stop("scale must be a single positive integer")
-  scale<-as.integer(scale)
-  if(interval=="monthly")
-    sal<-CSIimport_monthly(file)
-  else if(interval=="daily")
-    sal<-CSIimport_daily(file)
-  else if(interval=="hourly" || interval=="60-minute")
-    sal<-CSIimport_hourly(file)
-  else if(interval=="interval" || interval=="irregular")
-    sal<-CSIimport_interval(file)
+  sal<-do.call(paste0("CSIimport_", interval), list(file))
 
   return(sal)
 }
