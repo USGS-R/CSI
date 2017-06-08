@@ -2,23 +2,21 @@
 % Please edit documentation in R/CSIimport.R
 \name{CSIimport}
 \alias{CSIimport}
-\title{Import files for CSI calculation}
+\title{Import salinity value files.}
 \usage{
-CSIimport(file, interval = c("daily", "hourly", "15-minute", "60-minute",
-  "irregular", "interval"), scale = 24)
+CSIimport(file, interval = c("monthly", "daily", "hourly", "15-minute",
+  "60-minute", "irregular", "interval"), scale = 24)
 }
 \arguments{
 \item{file}{character The file to import.}
 
-\item{interval}{character The timestamp frequency -- '15 minute', '60 minute', or 'daily' (default).}
-
-\item{scale}{numeric The range of months over which to compare. Default: 24.}
+\item{interval}{character The timestamp frequency -- '15 minute', '60 minute', 'daily', 'interval', or 'monthly' (default).}
 }
 \value{
-An array of CSI values
+A data.frame of year+monthly timestamps with columns of salinity values
 }
 \description{
-Read in salinity values file.
+Read in salinity values files of various intervals.
 }
 \examples{
 csi <- CSIimport("~/Desktop/R/CSI_source/Monthly_Waccamaw_LittleBlack_Rivers.csv")
