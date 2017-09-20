@@ -7,16 +7,21 @@
 CSIimport_daily(file)
 }
 \arguments{
-\item{file}{character The daily-value file to import. Must have Year, Month, and Day columns (or single column 'Date' = YYYY-MM-DD), and columns of salinty values by site.}
+\item{file}{character The daily-value file to import. Must have Year, Month, and Day columns, or single column Date = 'YYYY-MM-DD', and columns of salinty values by site.}
 }
 \value{
-A data.frame of year+monthly timestamps with columns of salinity values
+A data.frame with Year and Month timestamp columns, with columns of site salinity values.
 }
 \description{
 Read in daily salinity values file.
 }
 \examples{
-#add file with Year,Month,Day columns
-csi <- CSIimport_daily(system.file("extdata","Daily_Waccamaw_LittleBlack_Rivers.csv",package="CSI"))
+# Data file with Year, Month, and Day columns
+data_path <- system.file("extdata", "Daily_Waccamaw_LittleBlack_Rivers.csv", package="CSI")
+sal <- CSIimport_daily(data_path)
+
+# Data file with single Date column
+data_path <- system.file("extdata", "Daily_South_Carolina.csv", package="CSI")
+sal <- CSIimport_daily(data_path)
 
 }

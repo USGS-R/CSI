@@ -4,13 +4,13 @@
 \alias{CSIimport}
 \title{Import salinity value files.}
 \usage{
-CSIimport(file, interval = c("monthly", "daily", "hourly", "15-minute",
-  "60-minute", "irregular", "interval"))
+CSIimport(file, interval = c("monthly", "daily", "24hour", "interval",
+  "unit"))
 }
 \arguments{
 \item{file}{character The file to import.}
 
-\item{interval}{character The timestamp frequency -- '15 minute', '60 minute', 'daily', 'interval', or 'monthly' (default).}
+\item{interval}{character The timestamp frequency -- 'daily', 'interval'/'unit', or 'monthly' (default).}
 }
 \value{
 A data.frame of year+monthly timestamps with columns of salinity values
@@ -19,6 +19,8 @@ A data.frame of year+monthly timestamps with columns of salinity values
 Read in salinity values files of various intervals.
 }
 \examples{
-csi <- CSIimport("~/Desktop/R/CSI_source/Monthly_Waccamaw_LittleBlack_Rivers.csv")
+# Data file with Year and Month columns
+data_path <- system.file("extdata", "Monthly_Coastal_EDEN.csv", package = "CSI")
+sal <- CSIimport(data_path, interval = "monthly")
 
 }

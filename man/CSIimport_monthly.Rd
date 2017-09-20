@@ -7,15 +7,21 @@
 CSIimport_monthly(file)
 }
 \arguments{
-\item{file}{character The monthly-value file to import. Must have Year and Month columns, and columns of salinty values by site.}
+\item{file}{character The monthly-value file to import. Must have Year and Month columns, or single YearMo column = 'YYYY-MM', and columns of salinty values by site.}
 }
 \value{
-A data.frame of year+monthly timestamps with columns of salinity values
+A data.frame with Year and Month timestamp columns, with columns of site salinity values.
 }
 \description{
 Read in monthly salinity values file.
 }
 \examples{
-csi <- CSIimport_monthly("~/Desktop/R/CSI_source/Monthly_Waccamaw_LittleBlack_Rivers.csv")
+# Data file with Year and Month columns
+data_path <- system.file("extdata", "Monthly_Coastal_EDEN.csv", package = "CSI")
+sal <- CSIimport_monthly(data_path)
+
+# Data file with single YearMo column
+data_path <- system.file("extdata", "Monthly_ACE_Basin.csv", package = "CSI")
+sal <- CSIimport_monthly(data_path)
 
 }

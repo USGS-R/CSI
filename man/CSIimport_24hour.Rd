@@ -6,6 +6,9 @@
 \usage{
 CSIimport_24hour(file)
 }
+\arguments{
+\item{file}{character The daily-value file to import. Must have Year, Month, and Day columns, or single column Date = 'YYYY-MM-DD', and columns of salinty values by site.}
+}
 \description{
 Read in daily salinity values file.
 
