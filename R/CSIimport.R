@@ -5,7 +5,7 @@
 #' @param file character The file to import.
 #' @param interval character The timestamp frequency -- 'daily', 'interval'/'unit', or 'monthly' (default).
 #'
-#' @return A data.frame of year+monthly timestamps with columns of salinity values
+#' @return A data.frame with Year and Month timestamp columns, with columns of site salinity values.
 #'
 #' @importFrom utils read.csv
 #'

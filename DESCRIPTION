@@ -10,7 +10,8 @@ Copyright: This software is in the public domain because it contains materials
 Depends: R (>= 3.0)
 Imports: utils,
     SPEI,
-    dplyr
+    dplyr,
+    zoo
 Suggests: knitr,
     rmarkdown,
     testthat
