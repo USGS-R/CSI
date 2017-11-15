@@ -4,6 +4,7 @@
 #'
 #' @param csi array A 3D array of CSI values with dimensions of number of months covered, scale of months analysed (typically 1-24), and number of sites.
 #' @param dir character Directory to write output files to.
+#' @param thumbs logical. If true, thumbnail plots will be generated in addition to full-sized plots.
 #'
 #' @importFrom grDevices dev.off png
 #' @importFrom graphics axis par plot rect
@@ -17,7 +18,7 @@
 #' csi <- CSIcalc(sal)
 #' CSIstack(csi)
 #'
-CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked")) {
+CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F) {
   if (!(length(dir) == 1) || !is.character(dir))
     stop("dir must be a single character string")
   if (!dir.exists(dir)) dir.create(dir)
@@ -32,6 +33,21 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked")) {
   scale <- dim(csi)[2]
   int_ht <- max / scale # Height of scale interval for stacked plot
   for (j in 1:num_sites) {
+    mwa <- NULL # 12-month moving-window average
+    for (k in 1:(num_months - 11))
+      mwa[k] <- mean(sal[k:(k + 11), j + 2])
+    mwa <- c(rep(NA, num_months - length(mwa)), mwa) # pad
+    if (thumbs) {
+      png(filename = paste0(dir, "/", dimnames(csi)[[3]][j], "_stacked_thumb.png"), width = 360, height = 150, units = "px", pointsize = 2, type = "quartz")
+      par(mar = c(0, 0, 0, 0) + .1)
+      plot(yrange, sal[, j + 2], type = "n", ylim = c(0, max), ylab = "", xlab = "", main = "", xaxt = "n", yaxt = "n", axes = F, frame.plot = T)
+      for (i in 1:24) {
+        bin <- cut(unlist(csi[, i, j]), csi.breaks, labels = F)
+        for(k in 1:num_months) if(!is.na(bin[k])) rect(as.numeric(yrange[k]), i * int_ht - int_ht, as.numeric(yrange[k + 1]),i * int_ht, col = csi.cols[bin[k]], border = NA)
+      }
+      lines(yrange2, mwa, lwd = 2)
+      dev.off()
+    }
     png(filename = paste0(dir, "/", dimnames(csi)[[3]][j], "_stacked.png"), width = 1724, height = 614, units = "px", pointsize = 12, type = "quartz")
     par(mar = c(5.1, 4.1, 4.1, 4.1))
     plot(yrange, sal[, j + 2], type = "n", ylim = c(0, max), ylab = "Coastal Salinity Index interval (months)", xlab = "Date", main = paste0(dimnames(csi)[[3]][j], " Coastal Salinity Index with 1-", scale, " month interval"), axes = F, frame.plot = T)
@@ -39,10 +55,6 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked")) {
       bin <- cut(unlist(csi[, i, j]), csi.breaks, labels = F)
       for (k in 1:num_months) if (!is.na(bin[k])) rect(as.numeric(yrange[k]), i * int_ht - int_ht, as.numeric(yrange[k + 1]), i * int_ht, col = csi.cols[bin[k]], border = NA)
     }
-    mwa <- NULL # 12-month moving-window average
-    for (k in 1:(num_months - 11))
-      mwa[k] <- mean(sal[k:(k + 11), j + 2])
-    mwa <- c(rep(NA, num_months - length(mwa)), mwa) # pad
     lines(yrange2, mwa, lwd = 3, col = "lightskyblue")
     abline(h = mean(sal[, j + 2], na.rm = T), lwd = 3, col = "darkgrey")
     abline(h = quantile(sal[, j + 2], c(.25, .75), na.rm = T), lwd = 3,col = "lightgrey")

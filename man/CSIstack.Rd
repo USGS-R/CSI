@@ -4,12 +4,14 @@
 \alias{CSIstack}
 \title{Create stacked CSI interval plots for sites}
 \usage{
-CSIstack(csi, dir = paste0(getwd(), "/csi_stacked"))
+CSIstack(csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F)
 }
 \arguments{
 \item{csi}{array A 3D array of CSI values with dimensions of number of months covered, scale of months analysed (typically 1-24), and number of sites.}
 
 \item{dir}{character Directory to write output files to.}
+
+\item{thumbs}{logical. If true, thumbnail plots will be generated in addition to full-sized plots.}
 }
 \description{
 For each site (layer) in the csi object, plot the intervals (columns) on a stacked plot.
