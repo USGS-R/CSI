@@ -42,8 +42,8 @@ CSIcalc <- function (sal, scale = 24) {
     for (i in 1:scale) # loop for each scale
       x[,i] <- -as.vector(spi(sal[which(!is.na(sal[, j])), j], i)$fitted) # calculate CSI (negative SPI) and extract values
     # Pad matrix for record length differences across sites; assumes missing beginning or end records only -- no internal NAs
-    if (is.na(sal[1, j])) x <- rbind(matrix(NA, length(which(is.na(sal[, j]))), scale), x)
-    if (is.na(sal[num_months, j])) x <- rbind(x, matrix(NA, length(which(is.na(sal[, j]))), scale))
+    if (is.na(sal[1, j])) x <- rbind(matrix(NA, length(1:which(!is.na(sal[, j]))[1]) - 1, scale), x)
+    if (is.na(sal[num_months, j])) x <- rbind(x, matrix(NA, length(rev(which(!is.na(sal[, j])))[1]:num_months) - 1, scale))
     csi[, , j - 2] <- x
   }
   attr(csi, "sal") <- sal
