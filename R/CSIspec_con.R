@@ -19,7 +19,14 @@ CSIspec_con <- function (sc) {
     stop("sc must me a data.frame with Year and Month columns, and colums of site specific conductance values")
 
   sal <- sc[, 1:2]
-  sal[, 3:dim(sc)[2]] <- 1.2817 * (0.36996 / (((sc[, 3:dim(sc)[2]] / 1000) ^ (-1.07)) - 0.0007464))
+  k1 <- 0.0120    # Wagner et al., 2006
+  k2 <- -0.2174
+  k3 <- 25.3283
+  k4 <- 13.7714
+  k5 <- -6.4788
+  k6 <- 2.5842
+  r <- sc[, 3:dim(sc)[2]] / 53087
+  sal[, 3:dim(sc)[2]] <- k1 + k2 * r ^ 0.5 + k3 * r + k4 * r ^ 1.5 + k5 * r ^ 2 + k6 * r ^ 2.5
   names(sal) <- names(sc)
 
   return(sal)

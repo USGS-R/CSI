@@ -40,11 +40,11 @@ CSIplot <- function (csi, dir = paste0(getwd(), "/csi_plots")) {
       for (k in 1:(num_months - i + 1))
         mwa[k] <- mean(sal[k:(k + i - 1), j + 2])
       mwa <- c(rep(NA, num_months - length(mwa)), mwa) # pad
-      png(filename = paste0(dir, "/", dimnames(csi)[[3]][j], "_interval", i, ".png"), width = 1724, height = 614, units = "px", pointsize = 12, type = "quartz")
+      png(filename = paste0(dir, "/", dimnames(csi)[[3]][j], "_interval", i, ".png"), width = 1724, height = 614, units = "px", pointsize = 12)
       par(mar = c(5, 4, 4, 5) + .1)
-      plot(yrange, sal[, j + 2], type = "n", ylim = c(0, max), ylab = paste0(i, "-month average salinity (PPT)"), xlab = "Date", main = paste0(dimnames(csi)[[3]][j], " ", i, "-month CSI (background) and ", i, "-month average salinity (black trace)"), xaxt = "n")
+      plot(yrange, sal[, j + 2], type = "n", ylim = c(0, max), ylab = paste0(i, "-month average salinity (PPT)"), xlab = "Date", main = paste0(dimnames(csi)[[3]][j], " ", i, "-month CSI (background) and ", i, "-month average salinity (black trace)"), xaxt = "n", tck = 0.02)
       for (k in 1:num_months) if (!is.na(bin[k])) rect(as.numeric(yrange[k]), 0, as.numeric(yrange[k + 1]), 56, col = csi.cols[bin[k]], border = NA)
-      axis(1, as.numeric(seq.Date(as.Date(paste0(sal$Year[1], "/1/1")), as.Date(paste0(sal$Year[num_months], "/1/1")), by = "year")), sal$Year[1]:sal$Year[num_months])
+      axis(1, as.numeric(seq.Date(as.Date(paste0(sal$Year[1], "/1/1")), as.Date(paste0(sal$Year[num_months], "/1/1")), by = "year")), sal$Year[1]:sal$Year[num_months], tck = 0.02)
       #    par(new=T) # Optional 1-month interval line. To remove, comment out from this line...
       #    plot(yrange,csi[,1,j],type="l",ylim=range(csi,na.rm=T),xaxt="n",yaxt="n",xlab="",ylab="",lwd=3,col="dodgerblue")
       #    axis(4)

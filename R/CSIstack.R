@@ -38,7 +38,7 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F) {
       mwa[k] <- mean(sal[k:(k + 11), j + 2])
     mwa <- c(rep(NA, num_months - length(mwa)), mwa) # pad
     if (thumbs) {
-      png(filename = paste0(dir, "/", dimnames(csi)[[3]][j], "_stacked_thumb.png"), width = 360, height = 150, units = "px", pointsize = 2, type = "quartz")
+      png(filename = paste0(dir, "/", dimnames(csi)[[3]][j], "_stacked_thumb.png"), width = 360, height = 150, units = "px", pointsize = 2)
       par(mar = c(0, 0, 0, 0) + .1)
       plot(yrange, sal[, j + 2], type = "n", ylim = c(0, max), ylab = "", xlab = "", main = "", xaxt = "n", yaxt = "n", axes = F, frame.plot = T)
       for (i in 1:24) {
@@ -48,31 +48,31 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F) {
       lines(yrange2, mwa, lwd = 2)
       dev.off()
     }
-    png(filename = paste0(dir, "/", dimnames(csi)[[3]][j], "_stacked.png"), width = 1724, height = 614, units = "px", pointsize = 12, type = "quartz")
+    png(filename = paste0(dir, "/", dimnames(csi)[[3]][j], "_stacked.png"), width = 1724, height = 614, units = "px", pointsize = 12)
     par(mar = c(5.1, 4.1, 4.1, 4.1))
     plot(yrange, sal[, j + 2], type = "n", ylim = c(0, max), ylab = "Coastal Salinity Index interval (months)", xlab = "Date", main = paste0(dimnames(csi)[[3]][j], " Coastal Salinity Index with 1-", scale, " month interval"), axes = F, frame.plot = T)
     for (i in 1:scale) {
       bin <- cut(unlist(csi[, i, j]), csi.breaks, labels = F)
       for (k in 1:num_months) if (!is.na(bin[k])) rect(as.numeric(yrange[k]), i * int_ht - int_ht, as.numeric(yrange[k + 1]), i * int_ht, col = csi.cols[bin[k]], border = NA)
     }
-    lines(yrange2, mwa, lwd = 3, col = "lightskyblue")
-    abline(h = mean(sal[, j + 2], na.rm = T), lwd = 3, col = "darkgrey")
-    abline(h = quantile(sal[, j + 2], c(.25, .75), na.rm = T), lwd = 3,col = "lightgrey")
-    axis(1, as.numeric(seq.Date(as.Date(paste0(sal$Year[1], "/1/1")), as.Date(paste0(sal$Year[num_months], "/1/1")), by = "year")), sal$Year[1]:sal$Year[num_months])
-    axis(2, seq(int_ht / 2, max, int_ht), 1:scale)
-    axis(4, c(0, 5, 18, 30, 40, 50), lwd.ticks = 3)
+    abline(h = mean(sal[, j + 2], na.rm = T), lwd = 3, col = "grey28")
+    abline(h = quantile(sal[, j + 2], c(.25, .75), na.rm = T), lwd = 3,col = "darkgrey")
+    lines(yrange2, mwa, lwd = 3, col = "darkblue")
+    axis(1, as.numeric(seq.Date(as.Date(paste0(sal$Year[1], "/1/1")), as.Date(paste0(sal$Year[num_months], "/1/1")), by = "year")), sal$Year[1]:sal$Year[num_months], tck = 0.02)
+    axis(2, seq(int_ht / 2, max, int_ht), 1:scale, tck = 0.02)
     rect(as.numeric(yrange[num_months] + 150), -50, as.numeric(yrange[num_months]) +300, 5.25, col = "cyan1", border = NA)
     rect(as.numeric(yrange[num_months] + 150), 5.25, as.numeric(yrange[num_months]) +300, 18, col = "cyan2", border = NA)
     rect(as.numeric(yrange[num_months] + 150), 18, as.numeric(yrange[num_months]) +300, 30, col = "cyan3", border = NA)
     rect(as.numeric(yrange[num_months] + 150), 30, as.numeric(yrange[num_months]) +300, 40, col = "cyan4", border = NA)
     rect(as.numeric(yrange[num_months] + 150), 40, as.numeric(yrange[num_months]) +300, 80, col = "deepskyblue4", border = NA)
-    axis(4, c(1.5, 11.5, 24, 35, 49), c("Oligohaline", "Mesohaline", "Polyhaline", "Euhaline", "Hypersaline"), tick = F, padj = -4.5, font = 4, cex.axis = 0.9)
+    axis(4, c(1, 11.5, 24, 35, 49), c("Oligohaline", "Mesohaline", "Polyhaline", "Euhaline", "Hypersaline"), tick = F, padj = -4.5, font = 2)
+    axis(4, c(5.25, 18, 30, 40), c(5, 18, 30, 40), lwd.ticks = 0.5, tck = 0.06)
     mtext("Period of record values and estuarine salinity ranges, in practical salinity units", 4, 3)
     fst <- which(!is.na(sal[, j + 2]))[1]
     lst <- tail(which(!is.na(sal[, j + 2])), 1)
     mtext(paste0("Period of record: ", sal$Month[fst], "/", sal$Year[fst], " - ", sal$Month[lst], "/", sal$Year[lst]), 3, adj = 0)
-    legend("topleft", c("12-month rolling average", "Mean", "25th and 75th Percentile"), lwd = 3, col=c("lightskyblue", "darkgrey", "lightgrey"))
-    legend("topleft", c("CD4", "CD3", "CD2", "CD1", "CD0", "Normal", "CW0", "CW1", "CW2", "CW3", "CW4"), fill = csi.cols, inset = c(0, 0.125))
+    legend("topleft", c("12-month rolling average", "Mean", "25th and 75th Percentile"), lwd = 3, col=c("darkblue", "grey28", "darkgrey"), inset = c(0.01, 0.01))
+    legend("topleft", c("CD4", "CD3", "CD2", "CD1", "CD0", "Normal", "CW0", "CW1", "CW2", "CW3", "CW4"), fill = csi.cols, inset = c(0.01, 0.135))
     dev.off()
   }
 }
