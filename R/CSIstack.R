@@ -66,8 +66,8 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, gr
     abline(h = mean(sal[, j + 2], na.rm = T), lwd = 3, col = "grey28")
     abline(h = quantile(sal[, j + 2], c(.25, .75), na.rm = T), lwd = 3,col = "darkgrey")
     lines(xrange2, mwa[, j], lwd = 3, col = "darkblue")
-    axis(1, as.numeric(seq.Date(as.Date(paste0(sal$Year[1], "/1/1")), as.Date(paste0(sal$Year[num_months], "/1/1")), by = "year")), sal$Year[1]:sal$Year[num_months], tck = 0.02)
-    axis(2, seq(int_ht / 2, max, int_ht), 1:scale, tck = 0.02, las = 1)
+    axis(1, as.numeric(seq.Date(as.Date(paste0(sal$Year[1], "/1/1")), as.Date(paste0(sal$Year[num_months], "/1/1")), by = "year")), sal$Year[1]:sal$Year[num_months], tck = 0.02, cex.axis = 1.25)
+    axis(2, seq(int_ht / 2, max, int_ht), 1:scale, tck = 0.02, las = 1, cex.axis = 1.25)
     rect(as.numeric(xrange[num_months] + 150), -50, as.numeric(xrange[num_months]) +300, 5.25, col = "cyan1", border = NA)
     rect(as.numeric(xrange[num_months] + 150), 5.25, as.numeric(xrange[num_months]) +300, 18, col = "cyan2", border = NA)
     rect(as.numeric(xrange[num_months] + 150), 18, as.numeric(xrange[num_months]) +300, 30, col = "cyan3", border = NA)
@@ -79,9 +79,10 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, gr
     fst <- which(!is.na(sal[, j + 2]))[1]
     lst <- tail(which(!is.na(sal[, j + 2])), 1)
     tmp <- legend("topleft", c("", "", "", "", "", "", "", "", "", "12-month rolling salinity average", "Mean", "25th and 75th percentile"), lty = c(NA, NA, NA, NA, NA, NA, NA, NA, NA, 1, 1, 1), lwd = c(NA, NA, NA, NA, NA, NA, NA, NA, NA, 3, 3, 3), col = c(NA, NA, NA, NA, NA, NA, NA, NA, NA, "darkblue", "grey28", "darkgrey"), inset = c(0.01, 0.01), title = expression(bold("EXPLANATION")))
-    rect(c(9330, 9330, 9330, 9330, 9330, 9530, 9830, 9830, 9830, 9830, 9830), c(32.5, 31, 29.5, 28, 26.5, 26.5, 32.5, 31, 29.5, 28, 26.5), c(9490, 9490, 9490, 9490, 9490, 9790, 9990, 9990, 9990, 9990, 9990), c(33.8, 32.3, 30.8, 29.3, 27.8, 27.8, 33.8, 32.3, 30.8, 29.3, 27.8), lwd = 2, col = c(csi.cols[1:6], rev(csi.cols[7:11])))
-    text(c(9410, 9410, 9410, 9410, 9410, 9660, 9910, 9910, 9910, 9910, 9910), c(33.15, 31.65, 30.15, 28.65, 27.15, 27.15, 33.15, 31.65, 30.15, 28.65, 27.15), c("CD4", "CD3", "CD2", "CD1", "CD0", "Normal", "CW4", "CW3", "CW2", "CW1", "CW0"))
     text(tmp$rect$left + tmp$rect$w, tmp$text$y[1:2], c("CD, coastal drought; CW, coastal wet", paste0("Period of record: ", sal$Month[fst], "/", sal$Year[fst], " - ", sal$Month[lst], "/", sal$Year[lst])), pos = 2)
+    par(usr = c(0, 1, 0, 1))
+    rect(c(0.028, 0.028, 0.028, 0.028, 0.028, 0.053, 0.091, 0.091, 0.091, 0.091, 0.091), c(0.834, 0.796, 0.758, 0.720, 0.682, 0.682, 0.834, 0.796, 0.758, 0.720, 0.682), c(0.048, 0.048, 0.048, 0.048, 0.048, 0.086, 0.111, 0.111, 0.111, 0.111, 0.111), c(0.866, 0.828, 0.790, 0.752, 0.714, 0.714, 0.866, 0.828, 0.790, 0.752, 0.714), lwd = 2, col = c(csi.cols[1:6], rev(csi.cols[7:11])))
+    text(c(0.038, 0.038, 0.038, 0.038, 0.038, 0.070, 0.101, 0.101, 0.101, 0.101, 0.101), c(0.850, 0.812, 0.774, 0.736, 0.698, 0.698, 0.850, 0.812, 0.774, 0.736, 0.698), c("CD4", "CD3", "CD2", "CD1", "CD0", "Normal", "CW4", "CW3", "CW2", "CW1", "CW0"))
     dev.off()
   }
 }
