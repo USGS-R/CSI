@@ -58,7 +58,7 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, gr
     }
     png(filename = paste0(dir, "/", dimnames(csi)[[3]][j], "_stacked.png"), width = 1724, height = 614, units = "px", pointsize = 12)
     par(mar = c(5.1, 4.1, 4.1, 4.1))
-    plot(xrange, sal[, j + 2], type = "n", ylim = c(0, max), ylab = "Coastal salinity index interval, in months", xlab = "Date", main = paste0(dimnames(csi)[[3]][j], " Coastal Salinity Index With 1- to ", scale, "-Month Interval"), axes = F, frame.plot = T)
+    plot(xrange, sal[, j + 2], type = "n", ylim = c(0, max), ylab = "Coastal salinity index interval, in months", xlab = "Date", main = paste0(dimnames(csi)[[3]][j], " Coastal Salinity Index With 1- to ", scale, "-Month Interval"), axes = F, frame.plot = T, cex.lab = 1.25)
     for (i in 1:scale) {
       bin <- cut(unlist(csi[, i, j]), csi.breaks, labels = F)
       for (k in 1:num_months) if (!is.na(bin[k])) rect(as.numeric(xrange[k]), i * int_ht - int_ht, as.numeric(xrange[k + 1]), i * int_ht, col = csi.cols[bin[k]], border = NA)
@@ -74,8 +74,8 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, gr
     rect(as.numeric(xrange[num_months] + 150), 30, as.numeric(xrange[num_months]) +300, 40, col = "cyan4", border = NA)
     rect(as.numeric(xrange[num_months] + 150), 40, as.numeric(xrange[num_months]) +300, 80, col = "deepskyblue4", border = NA)
     axis(4, c(olig_p, 6, 19, 31, 41), c(olig, meso, poly, eu, hyper), tick = F, padj = -4.5, hadj = 0, font = 2)
-    axis(4, c(5.25, 18, 30, 40), c(5, 18, 30, 40), lwd.ticks = 0.5, tck = 0.06, las = 1)
-    mtext("Period of record values and estuarine salinity ranges, in practical salinity units", 4, 3)
+    axis(4, c(5.25, 18, 30, 40), c(5, 18, 30, 40), lwd.ticks = 0.5, tck = 0.06, las = 1, cex.axis = 1.25)
+    mtext("Period of record values and estuarine salinity ranges, in practical salinity units", 4, 2.75, cex = 1.15)
     fst <- which(!is.na(sal[, j + 2]))[1]
     lst <- tail(which(!is.na(sal[, j + 2])), 1)
     tmp <- legend("topleft", c("", "", "", "", "", "", "", "", "", "12-month rolling salinity average", "Mean", "25th and 75th percentile"), lty = c(NA, NA, NA, NA, NA, NA, NA, NA, NA, 1, 1, 1), lwd = c(NA, NA, NA, NA, NA, NA, NA, NA, NA, 3, 3, 3), col = c(NA, NA, NA, NA, NA, NA, NA, NA, NA, "darkblue", "grey28", "darkgrey"), inset = c(0.01, 0.01), title = expression(bold("EXPLANATION")))
