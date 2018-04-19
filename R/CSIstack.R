@@ -24,7 +24,7 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, gr
     stop("dir must be a single character string")
   if (!dir.exists(dir)) dir.create(dir)
   csi.breaks <- c(-1000, -2, -1.6, -1.3, -0.8, -0.5, 0.5, 0.8, 1.3, 1.6, 2, 1000)
-  csi.cols <- c("#740200CC", "#E80600CC", "#FFAC00CC", "#FCD57BCC", "#FEFF00CC", "#FDFFE4CC", "#E4E1EACC", "#B6D0E5CC", "#91ABD0CC", "#33648DCC", "#23425FCC")
+  csi.cols <- c("#730000CC", "#E60000CC", "#FFAA00CC", "#FCD37FCC", "#FEFF00CC", "#FDFFE4CC", "#E4E1EACC", "#B6D0E5CC", "#91ABD0CC", "#33648DCC", "#23425FCC")
   xrange <- seq.Date(as.Date(paste(dimnames(csi)[[1]][1], "01", sep = "-")), as.Date(paste(rev(dimnames(csi)[[1]])[1], "01" , sep = "-")), by = "month")
   xrange2 <- xrange + 15 # Offset to plot midmonth
   sal <- attr(csi, "sal")
@@ -58,7 +58,7 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, gr
     }
     png(filename = paste0(dir, "/", dimnames(csi)[[3]][j], "_stacked.png"), width = 1724, height = 614, units = "px", pointsize = 12)
     par(mar = c(5.1, 4.1, 4.1, 4.1))
-    plot(xrange, sal[, j + 2], type = "n", ylim = c(0, max), ylab = "Coastal Salinity Index interval (months)", xlab = "Date", main = paste0(dimnames(csi)[[3]][j], " Coastal Salinity Index with 1-", scale, " month interval"), axes = F, frame.plot = T)
+    plot(xrange, sal[, j + 2], type = "n", ylim = c(0, max), ylab = "Coastal salinity index interval, in months", xlab = "Date", main = paste0(dimnames(csi)[[3]][j], " Coastal Salinity Index With 1- to ", scale, "-Month Interval"), axes = F, frame.plot = T)
     for (i in 1:scale) {
       bin <- cut(unlist(csi[, i, j]), csi.breaks, labels = F)
       for (k in 1:num_months) if (!is.na(bin[k])) rect(as.numeric(xrange[k]), i * int_ht - int_ht, as.numeric(xrange[k + 1]), i * int_ht, col = csi.cols[bin[k]], border = NA)
@@ -67,20 +67,21 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, gr
     abline(h = quantile(sal[, j + 2], c(.25, .75), na.rm = T), lwd = 3,col = "darkgrey")
     lines(xrange2, mwa[, j], lwd = 3, col = "darkblue")
     axis(1, as.numeric(seq.Date(as.Date(paste0(sal$Year[1], "/1/1")), as.Date(paste0(sal$Year[num_months], "/1/1")), by = "year")), sal$Year[1]:sal$Year[num_months], tck = 0.02)
-    axis(2, seq(int_ht / 2, max, int_ht), 1:scale, tck = 0.02)
+    axis(2, seq(int_ht / 2, max, int_ht), 1:scale, tck = 0.02, las = 1)
     rect(as.numeric(xrange[num_months] + 150), -50, as.numeric(xrange[num_months]) +300, 5.25, col = "cyan1", border = NA)
     rect(as.numeric(xrange[num_months] + 150), 5.25, as.numeric(xrange[num_months]) +300, 18, col = "cyan2", border = NA)
     rect(as.numeric(xrange[num_months] + 150), 18, as.numeric(xrange[num_months]) +300, 30, col = "cyan3", border = NA)
     rect(as.numeric(xrange[num_months] + 150), 30, as.numeric(xrange[num_months]) +300, 40, col = "cyan4", border = NA)
     rect(as.numeric(xrange[num_months] + 150), 40, as.numeric(xrange[num_months]) +300, 80, col = "deepskyblue4", border = NA)
     axis(4, c(olig_p, 6, 19, 31, 41), c(olig, meso, poly, eu, hyper), tick = F, padj = -4.5, hadj = 0, font = 2)
-    axis(4, c(5.25, 18, 30, 40), c(5, 18, 30, 40), lwd.ticks = 0.5, tck = 0.06)
+    axis(4, c(5.25, 18, 30, 40), c(5, 18, 30, 40), lwd.ticks = 0.5, tck = 0.06, las = 1)
     mtext("Period of record values and estuarine salinity ranges, in practical salinity units", 4, 3)
     fst <- which(!is.na(sal[, j + 2]))[1]
     lst <- tail(which(!is.na(sal[, j + 2])), 1)
-    mtext(paste0("Period of record: ", sal$Month[fst], "/", sal$Year[fst], " - ", sal$Month[lst], "/", sal$Year[lst]), 3, adj = 0)
-    legend("topleft", c("12-month rolling average", "Mean", "25th and 75th Percentile"), lwd = 3, col=c("darkblue", "grey28", "darkgrey"), inset = c(0.01, 0.01))
-    legend("topleft", c("CD4", "CD3", "CD2", "CD1", "CD0", "Normal", "CW0", "CW1", "CW2", "CW3", "CW4"), fill = csi.cols, inset = c(0.01, 0.135))
+    tmp <- legend("topleft", c("", "", "", "", "", "", "", "", "", "12-month rolling salinity average", "Mean", "25th and 75th percentile"), lty = c(NA, NA, NA, NA, NA, NA, NA, NA, NA, 1, 1, 1), lwd = c(NA, NA, NA, NA, NA, NA, NA, NA, NA, 3, 3, 3), col = c(NA, NA, NA, NA, NA, NA, NA, NA, NA, "darkblue", "grey28", "darkgrey"), inset = c(0.01, 0.01), title = expression(bold("EXPLANATION")))
+    rect(c(9330, 9330, 9330, 9330, 9330, 9530, 9830, 9830, 9830, 9830, 9830), c(32.5, 31, 29.5, 28, 26.5, 26.5, 32.5, 31, 29.5, 28, 26.5), c(9490, 9490, 9490, 9490, 9490, 9790, 9990, 9990, 9990, 9990, 9990), c(33.8, 32.3, 30.8, 29.3, 27.8, 27.8, 33.8, 32.3, 30.8, 29.3, 27.8), lwd = 2, col = c(csi.cols[1:6], rev(csi.cols[7:11])))
+    text(c(9410, 9410, 9410, 9410, 9410, 9660, 9910, 9910, 9910, 9910, 9910), c(33.15, 31.65, 30.15, 28.65, 27.15, 27.15, 33.15, 31.65, 30.15, 28.65, 27.15), c("CD4", "CD3", "CD2", "CD1", "CD0", "Normal", "CW4", "CW3", "CW2", "CW1", "CW0"))
+    text(tmp$rect$left + tmp$rect$w, tmp$text$y[1:2], c("CD, coastal drought; CW, coastal wet", paste0("Period of record: ", sal$Month[fst], "/", sal$Year[fst], " - ", sal$Month[lst], "/", sal$Year[lst])), pos = 2)
     dev.off()
   }
 }
