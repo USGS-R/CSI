@@ -4,10 +4,13 @@
 #'
 #' @param sal data.frame with Year and Month timestamp columns, with columns of site salinity values. Generally created by one of the CSIimport_ family functions.
 #' @param scale integer representing the scale at which the CSI will be computed. For example, a value of six would imply that data from the current month and of the past five months will be used for computing the CSI value for a given month.
+#' @param lmode logical. If true, L-moments are used in calculating alpha and beta parameters of gamma distribution as per SPEI package and Vicente-Serrano et al., 2010. If false (default), no L-moments are used, and gamma distribution parameters are caluclated directly from the observed data as per National Drought Mitigation Center (http://drought.unl.edu/MonitoringTools/DownloadableSPIProgram.aspx) and McKee et al., 1993.
 #'
 #' @return A 3D array of CSI values with dimensions of number of months covered, scale of months analysed (typically 1-24), and number of sites.
 #'
-#' @importFrom SPEI spi
+#' @importFrom lmomco pwm.ub pwm2lmom are.lmom.valid pargam cdfgam
+#' @importFrom MASS fitdistr
+#' @importFrom stats cycle embed qnorm sd ts
 #'
 #' @export
 #'
@@ -17,7 +20,7 @@
 #' sal <- CSIimport_monthly(data_path)
 #' csi <- CSIcalc(sal)
 #'
-CSIcalc <- function (sal, scale = 24) {
+CSIcalc <- function (sal, scale = 24, lmode = FALSE) {
   if (!(dim(sal)[1] >= 1) || !(dim(sal)[2] >= 3) || !is.data.frame(sal) || !any(names(sal) == 'Year') || !any(names(sal) == 'Month'))
     stop("sal must me a data.frame with Year and Month columns, and colums of site salinity values")
   yearmos <- paste(sal$Year, sal$Month, sep = "-")
@@ -36,17 +39,46 @@ CSIcalc <- function (sal, scale = 24) {
   }
   if (!is.null(r)) sal <- sal[, -r]
 
+  start_year <- sal$Year[1]
+  start_month <- sal$Month[1]
+  # Convert to time series
   csi <- array(NA, c(num_months, scale, num_sites), list(yearmos, 1:scale, names(sal)[3:(num_sites + 2)])) # initialize array for CSI values
   for (j in 3:dim(sal)[2]) { # loop for each site
-    x <- matrix(NA, length(which(!is.na(sal[, j]))), scale) # temp matrix to hold site CSIs
-    for (i in 1:scale) # loop for each scale
-      x[,i] <- -as.vector(spi(sal[which(!is.na(sal[, j])), j], i)$fitted) # calculate CSI (negative SPI) and extract values
-    # Pad matrix for record length differences across sites; assumes missing beginning or end records only -- no internal NAs
-    if (is.na(sal[1, j])) x <- rbind(matrix(NA, length(1:which(!is.na(sal[, j]))[1]) - 1, scale), x)
-    if (is.na(sal[num_months, j])) x <- rbind(x, matrix(NA, length(rev(which(!is.na(sal[, j])))[1]:num_months) - 1, scale))
-    csi[, , j - 2] <- x
+    data <- ts(as.matrix(sal[, j]), start = c(start_year, start_month), frequency = 12)
+    colnames(data) <- colnames(sal)[j]
+    x <- matrix(NA, length(data), scale) # temp matrix to hold site CSIs
+    for (i in 1:scale) { # loop for each scale
+      a <- data
+      if (i > 1) {
+        # Average months over CSI interval
+        a[i:length(a)] <- rowMeans(embed(a, i), na.rm = F)
+        a[1:(i - 1)] <- NA
+      }
+      # Loop over months
+      for (c in (1:12)) {
+        f <- which(cycle(a) == c)
+        f <- f[!is.na(a[f])]
+        month <- sort(a[f])
+        if (length(month) == 0 | is.na(sd(month, na.rm = T)) | sd(month, na.rm = T) == 0) {
+          x[f, i] <- NA
+          (next)()
+        }
+        pwm <- pwm.ub(month[month > 0])
+        lmom <- pwm2lmom(pwm)
+        if (!are.lmom.valid(lmom) | is.na(sum(lmom[[1]])) | is.nan(sum(lmom[[1]])))
+          (next)()
+        gampar <- pargam(lmom)
+        if (!lmode) {
+          tmp <- fitdistr(month, "gamma")
+          gampar$para <- c(tmp$estimate[1], 1 / tmp$estimate[2]) # overwrite gamma parameters
+        }
+        x[f, i] <- qnorm(cdfgam(a[f], gampar))
+      }
+    }
+    csi[, , j - 2] <- -x
   }
   attr(csi, "sal") <- sal
+  attr(csi, "lmode") <- lmode
 
   return(csi)
 }
