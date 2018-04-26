@@ -6,6 +6,7 @@
 #' @param dir character Directory to write output files to.
 #' @param thumbs logical. If true, thumbnail plots will be generated in addition to full-sized plots.
 #' @param grouped logical. If true, second y-asix (salinity) will be the same across all output plots.
+#' @param leg logical. If true, legend will be displayed in upper left corner.
 #'
 #' @importFrom grDevices dev.off png
 #' @importFrom graphics axis par plot rect text
@@ -19,7 +20,7 @@
 #' csi <- CSIcalc(sal)
 #' CSIstack(csi)
 #'
-CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, grouped = T) {
+CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, grouped = T, leg = T) {
   if (!(length(dir) == 1) || !is.character(dir))
     stop("dir must be a single character string")
   if (!dir.exists(dir)) dir.create(dir)
@@ -76,13 +77,15 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, gr
     axis(4, c(olig_p, 6, 19, 31, 41), c(olig, meso, poly, eu, hyper), tick = F, padj = -4.5, hadj = 0, font = 2)
     axis(4, c(5.25, 18, 30, 40), c(5, 18, 30, 40), lwd.ticks = 0.5, tck = 0.06, las = 1, cex.axis = 1.25)
     mtext("Period of record values and estuarine salinity ranges, in practical salinity units", 4, 2.75, cex = 1.15)
-    fst <- which(!is.na(sal[, j + 2]))[1]
-    lst <- tail(which(!is.na(sal[, j + 2])), 1)
-    tmp <- legend("topleft", c("", "", "", "", "", "", "", "", "", "12-month rolling salinity average", "Mean", "25th and 75th percentile"), lty = c(NA, NA, NA, NA, NA, NA, NA, NA, NA, 1, 1, 1), lwd = c(NA, NA, NA, NA, NA, NA, NA, NA, NA, 3, 3, 3), col = c(NA, NA, NA, NA, NA, NA, NA, NA, NA, "darkblue", "grey28", "darkgrey"), inset = c(0.01, 0.01), title = expression(bold("EXPLANATION")))
-    text(tmp$rect$left + tmp$rect$w, tmp$text$y[1:2], c("CD, coastal drought; CW, coastal wet", paste0("Period of record: ", sal$Month[fst], "/", sal$Year[fst], " - ", sal$Month[lst], "/", sal$Year[lst])), pos = 2)
-    par(usr = c(0, 1, 0, 1))
-    rect(c(0.028, 0.028, 0.028, 0.028, 0.028, 0.053, 0.091, 0.091, 0.091, 0.091, 0.091), c(0.834, 0.796, 0.758, 0.720, 0.682, 0.682, 0.834, 0.796, 0.758, 0.720, 0.682), c(0.048, 0.048, 0.048, 0.048, 0.048, 0.086, 0.111, 0.111, 0.111, 0.111, 0.111), c(0.866, 0.828, 0.790, 0.752, 0.714, 0.714, 0.866, 0.828, 0.790, 0.752, 0.714), lwd = 2, col = c(csi.cols[1:6], rev(csi.cols[7:11])))
-    text(c(0.038, 0.038, 0.038, 0.038, 0.038, 0.070, 0.101, 0.101, 0.101, 0.101, 0.101), c(0.850, 0.812, 0.774, 0.736, 0.698, 0.698, 0.850, 0.812, 0.774, 0.736, 0.698), c("CD4", "CD3", "CD2", "CD1", "CD0", "Normal", "CW4", "CW3", "CW2", "CW1", "CW0"))
+    if (leg) {
+      fst <- which(!is.na(sal[, j + 2]))[1]
+      lst <- tail(which(!is.na(sal[, j + 2])), 1)
+      tmp <- legend("topleft", c("", "", "", "", "", "", "", "", "", "12-month rolling salinity average", "Mean", "25th and 75th percentile"), lty = c(NA, NA, NA, NA, NA, NA, NA, NA, NA, 1, 1, 1), lwd = c(NA, NA, NA, NA, NA, NA, NA, NA, NA, 3, 3, 3), col = c(NA, NA, NA, NA, NA, NA, NA, NA, NA, "darkblue", "grey28", "darkgrey"), inset = c(0.01, 0.01), title = expression(bold("EXPLANATION")))
+      text(tmp$rect$left + tmp$rect$w, tmp$text$y[1:2], c("CD, coastal drought; CW, coastal wet", paste0("Period of record: ", sal$Month[fst], "/", sal$Year[fst], " - ", sal$Month[lst], "/", sal$Year[lst])), pos = 2)
+      par(usr = c(0, 1, 0, 1))
+      rect(c(0.028, 0.028, 0.028, 0.028, 0.028, 0.053, 0.091, 0.091, 0.091, 0.091, 0.091), c(0.834, 0.796, 0.758, 0.720, 0.682, 0.682, 0.834, 0.796, 0.758, 0.720, 0.682), c(0.048, 0.048, 0.048, 0.048, 0.048, 0.086, 0.111, 0.111, 0.111, 0.111, 0.111), c(0.866, 0.828, 0.790, 0.752, 0.714, 0.714, 0.866, 0.828, 0.790, 0.752, 0.714), lwd = 2, col = c(csi.cols[1:6], rev(csi.cols[7:11])))
+      text(c(0.038, 0.038, 0.038, 0.038, 0.038, 0.070, 0.101, 0.101, 0.101, 0.101, 0.101), c(0.850, 0.812, 0.774, 0.736, 0.698, 0.698, 0.850, 0.812, 0.774, 0.736, 0.698), c("CD4", "CD3", "CD2", "CD1", "CD0", "Normal", "CW4", "CW3", "CW2", "CW1", "CW0"))
+    }
     dev.off()
   }
 }
