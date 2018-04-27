@@ -2,7 +2,7 @@
 % Please edit documentation in R/CSIcumper.R
 \name{CSIcumper}
 \alias{CSIcumper}
-\title{Create stacked CSI interval plots for sites}
+\title{Create cumulative percentage CSI plots for sites}
 \usage{
 CSIcumper(csi, dir = paste0(getwd(), "/csi_cumper"))
 }
@@ -10,19 +10,15 @@ CSIcumper(csi, dir = paste0(getwd(), "/csi_cumper"))
 \item{csi}{array A 3D array of CSI values with dimensions of number of months covered, scale of months analysed (typically 1-24), and number of sites.}
 
 \item{dir}{character Directory to write output files to.}
-
-\item{thumbs}{logical. If true, thumbnail plots will be generated in addition to full-sized plots.}
-
-\item{grouped}{logical. If true, second y-asix (salinity) will be the same across all output plots.}
 }
 \description{
-For each site (layer) in the csi object, plot the intervals (columns) on a stacked plot.
+For each site (layer) in the csi object, plot the intervals (columns) on a cumulative percentage plot.
 }
 \examples{
 # Data file with Year and Month columns
 data_path <- system.file("extdata", "Monthly_Coastal_EDEN.csv", package = "CSI")
 sal <- CSIimport_monthly(data_path)
 csi <- CSIcalc(sal)
-CSIstack(csi)
+CSIcumper(csi)
 
 }
