@@ -10,6 +10,7 @@
 #'
 #' @importFrom grDevices dev.off png
 #' @importFrom graphics axis par plot rect text
+#' @importFrom utils tail
 #'
 #' @export
 #'
