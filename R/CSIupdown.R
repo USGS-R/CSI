@@ -37,12 +37,12 @@ CSIupdown <- function (csi, dir = paste0(getwd(), "/csi_updowns")) {
       axis(1, as.numeric(seq.Date(as.Date(paste0(sal$Year[1], "/1/1")), as.Date(paste0(sal$Year[num_months], "/1/1")), by = "year")), sal$Year[1]:sal$Year[num_months], cex.axis = 1.25, tck = 0.02)
       abline(v = seq.Date(as.Date(paste0(sal$Year[1], "-01-01")), as.Date(paste0(rev(sal$Year)[1], "-01-01")), by = "year"))
       abline(h = 0)
-      posx <- negx <- xrange[!is.na(csi[, i, j])]
-      posy <- negy <- csi[, i, j][!is.na(csi[, i, j])]
-      posy[posy < 0] <- 0
+      posx <- negx <- xrange[which(!is.na(csi[, i, j]))[1]:rev(which(!is.na(csi[, i, j])))[1]]
+      posy <- negy <- csi[, i, j][which(!is.na(csi[, i, j]))[1]:rev(which(!is.na(csi[, i, j])))[1]]
+      posy[posy < 0 | is.na(posy)] <- 0
       if (posy[1] != 0) { posy <- c(0, posy); posx <- c(posx[1], posx) }
       if (posy[length(posy)] != 0) { posy <- c(posy, 0); posx <- c(posx, posx[length(posx)]) }
-      negy[negy > 0] <- 0
+      negy[negy > 0 | is.na(negy)] <- 0
       if (negy[1] != 0) { negy <- c(0, negy); negx <- c(negx[1], negx) }
       if (negy[length(negy)] != 0) { negy <- c(negy, 0); negx <- c(negx, negx[length(negx)]) }
       polygon(posx, posy, col = "blue")

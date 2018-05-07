@@ -27,23 +27,11 @@ CSIcalc <- function (sal, scale = 24, lmode = FALSE) {
   num_months <- dim(sal)[1]    # number of months in data set
   num_sites <- dim(sal)[2] - 2 # number of sites in data set, removing Year and Month columns
 
-  r <- NULL
-  for (j in 1:num_sites) { # check for internal NAs
-    first_meas <- which(!is.na(sal[, j + 2]))[1]
-    last_meas <- rev(which(!is.na(sal[, j + 2])))[1]
-    if (any(which(is.na(sal[, j + 2])) > first_meas & which(is.na(sal[, j + 2])) < last_meas)) {
-      warning(paste("Internal NAs detected. At least one measured value per month must be present between first and last measured values. Site", names(sal)[j + 2], "removed from analysis. Consider CSIinterp to fill gaps."), immediate. = T)
-      r <- c(r, j + 2)
-      num_sites <- num_sites - 1
-    }
-  }
-  if (!is.null(r)) sal <- sal[, -r]
-
-  start_year <- sal$Year[1]
-  start_month <- sal$Month[1]
-  # Convert to time series
+  start_year <- as.numeric(sal$Year[1])
+  start_month <- as.numeric(sal$Month[1])
   csi <- array(NA, c(num_months, scale, num_sites), list(yearmos, 1:scale, names(sal)[3:(num_sites + 2)])) # initialize array for CSI values
   for (j in 3:dim(sal)[2]) { # loop for each site
+    # Convert to time series
     data <- ts(as.matrix(sal[, j]), start = c(start_year, start_month), frequency = 12)
     colnames(data) <- colnames(sal)[j]
     x <- matrix(NA, length(data), scale) # temp matrix to hold site CSIs
@@ -51,7 +39,7 @@ CSIcalc <- function (sal, scale = 24, lmode = FALSE) {
       a <- data
       if (i > 1) {
         # Average months over CSI interval
-        a[i:length(a)] <- rowMeans(embed(a, i), na.rm = F)
+        a[i:length(a)] <- rowMeans(embed(a, i), na.rm = TRUE)
         a[1:(i - 1)] <- NA
       }
       # Loop over months
@@ -69,13 +57,14 @@ CSIcalc <- function (sal, scale = 24, lmode = FALSE) {
           (next)()
         gampar <- pargam(lmom)
         if (!lmode) {
-          tmp <- fitdistr(month, "gamma")
+          tmp <- fitdistr(month[month > 0], "gamma")
           gampar$para <- c(tmp$estimate[1], 1 / tmp$estimate[2]) # overwrite gamma parameters
         }
         x[f, i] <- qnorm(cdfgam(a[f], gampar))
       }
     }
     csi[, , j - 2] <- -x
+    csi[is.infinite(csi)] <- NA
   }
   attr(csi, "sal") <- sal
   attr(csi, "lmode") <- lmode

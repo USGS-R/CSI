@@ -35,7 +35,7 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, gr
   mwa <- array(NA, c(num_months - 11, num_sites)) # 12-month moving-window average
   for (j in 1:num_sites)
     for (k in 1:(num_months - 11))
-      mwa[k, j] <- mean(sal[k:(k + 11), j + 2])
+      mwa[k, j] <- mean(sal[k:(k + 11), j + 2], na.rm = T)
   mwa <- rbind(array(NA, c(11, num_sites)), mwa)
   for (j in 1:num_sites) {
     max <- if (grouped) ceiling(max(mwa, na.rm = T)) else ceiling(max(mwa[, j], na.rm = T))
@@ -53,7 +53,8 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, gr
       plot(xrange, sal[, j + 2], type = "n", ylim = c(0, max), ylab = "", xlab = "", main = "", xaxt = "n", yaxt = "n", axes = F, frame.plot = T)
       for (i in 1:24) {
         bin <- cut(unlist(csi[, i, j]), csi.breaks, labels = F)
-        for(k in 1:num_months) if(!is.na(bin[k])) rect(as.numeric(xrange[k]), i * int_ht - int_ht, as.numeric(xrange[k + 1]),i * int_ht, col = csi.cols[bin[k]], border = NA)
+        for (k in 1:num_months) rect(as.numeric(xrange[k]), i * int_ht - int_ht, as.numeric(xrange[k + 1]),i * int_ht, col = csi.cols[bin[k]], border = NA)
+        for (k in which(!is.na(bin))[1]:rev(which(!is.na(bin)))[1]) if (is.na(bin[k])) rect(as.numeric(xrange[k]), i * int_ht - int_ht, as.numeric(xrange[k + 1]), i * int_ht, col = "gray25", border = NA)
       }
       lines(xrange2, mwa[, j], lwd = 2)
       dev.off()
@@ -63,7 +64,8 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, gr
     plot(xrange, sal[, j + 2], type = "n", ylim = c(0, max), ylab = "Coastal salinity index interval, in months", xlab = "Date", main = paste0(dimnames(csi)[[3]][j], " Coastal Salinity Index With 1- to ", scale, "-Month Interval"), axes = F, frame.plot = T, cex.lab = 1.25)
     for (i in 1:scale) {
       bin <- cut(unlist(csi[, i, j]), csi.breaks, labels = F)
-      for (k in 1:num_months) if (!is.na(bin[k])) rect(as.numeric(xrange[k]), i * int_ht - int_ht, as.numeric(xrange[k + 1]), i * int_ht, col = csi.cols[bin[k]], border = NA)
+      for (k in 1:num_months) rect(as.numeric(xrange[k]), i * int_ht - int_ht, as.numeric(xrange[k + 1]), i * int_ht, col = csi.cols[bin[k]], border = NA)
+      for (k in which(!is.na(bin))[1]:rev(which(!is.na(bin)))[1]) if (is.na(bin[k])) rect(as.numeric(xrange[k]), i * int_ht - int_ht, as.numeric(xrange[k + 1]), i * int_ht, col = "gray25", border = NA)
     }
     abline(h = mean(sal[, j + 2], na.rm = T), lwd = 3, col = "grey28")
     abline(h = quantile(sal[, j + 2], c(.25, .75), na.rm = T), lwd = 3,col = "darkgrey")
