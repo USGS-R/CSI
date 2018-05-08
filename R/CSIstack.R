@@ -38,7 +38,7 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, gr
       mwa[k, j] <- mean(sal[k:(k + 11), j + 2], na.rm = T)
   mwa <- rbind(array(NA, c(11, num_sites)), mwa)
   for (j in 1:num_sites) {
-    max <- if (grouped) ceiling(max(mwa, na.rm = T)) else ceiling(max(mwa[, j], na.rm = T))
+    max <- if (grouped) ceiling(max(mwa, na.rm = T)) else max(mwa[, j], na.rm = T) * 1.1
     scale <- dim(csi)[2]
     int_ht <- max / scale # Height of scale interval for stacked plot
     olig <- if (max > 41) "Olig." else "Oligohaline"
