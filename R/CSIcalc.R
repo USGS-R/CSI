@@ -27,12 +27,14 @@ CSIcalc <- function (sal, scale = 24, lmode = FALSE) {
   num_months <- dim(sal)[1]    # number of months in data set
   num_sites <- dim(sal)[2] - 2 # number of sites in data set, removing Year and Month columns
 
-  start_year <- as.numeric(sal$Year[1])
-  start_month <- as.numeric(sal$Month[1])
   csi <- array(NA, c(num_months, scale, num_sites), list(yearmos, 1:scale, names(sal)[3:(num_sites + 2)])) # initialize array for CSI values
   for (j in 3:dim(sal)[2]) { # loop for each site
     # Convert to time series
-    data <- ts(as.matrix(sal[, j]), start = c(start_year, start_month), frequency = 12)
+    st <- which(!is.na(sal[, j]))[1]
+    en <- rev(which(!is.na(sal[, j])))[1]
+    start_year <- as.numeric(sal$Year[st])
+    start_month <- as.numeric(sal$Month[en])
+    data <- ts(as.matrix(sal[st:en, j]), start = c(start_year, start_month), frequency = 12)
     colnames(data) <- colnames(sal)[j]
     x <- matrix(NA, length(data), scale) # temp matrix to hold site CSIs
     for (i in 1:scale) { # loop for each scale
@@ -63,7 +65,7 @@ CSIcalc <- function (sal, scale = 24, lmode = FALSE) {
         x[f, i] <- qnorm(cdfgam(a[f], gampar))
       }
     }
-    csi[, , j - 2] <- -x
+    csi[st:en, , j - 2] <- -x
     csi[is.infinite(csi)] <- NA
   }
   attr(csi, "sal") <- sal
