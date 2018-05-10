@@ -33,9 +33,12 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, gr
   num_sites <- dim(csi)[3]
   num_months <- dim(csi)[1]
   mwa <- array(NA, c(num_months - 11, num_sites)) # 12-month moving-window average
-  for (j in 1:num_sites)
-    for (k in 1:(num_months - 11))
+  for (j in 1:num_sites) {
+    st <- which(!is.na(sal[, j + 2]))[1]
+    en <- rev(which(!is.na(sal[, j + 2])))[1]
+    for (k in st:(en - 11))
       mwa[k, j] <- mean(sal[k:(k + 11), j + 2], na.rm = T)
+  }
   mwa <- rbind(array(NA, c(11, num_sites)), mwa)
   for (j in 1:num_sites) {
     max <- if (grouped) ceiling(max(mwa, na.rm = T)) * 1.1 else max(mwa[, j], na.rm = T) * 1.1
