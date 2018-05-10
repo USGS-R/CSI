@@ -75,13 +75,14 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, gr
     lines(xrange2, mwa[, j], lwd = 3, col = "darkblue")
     axis(1, as.numeric(seq.Date(as.Date(paste0(sal$Year[1], "/1/1")), as.Date(paste0(sal$Year[num_months], "/1/1")), by = "year")), sal$Year[1]:sal$Year[num_months], tck = 0.02, cex.axis = 1.25)
     axis(2, seq(int_ht / 2, max, int_ht), 1:scale, tck = 0.02, las = 1, cex.axis = 1.25)
-    rect(as.numeric(xrange[num_months] + 150), -50, as.numeric(xrange[num_months]) + 5000, 5.25, col = "cyan1", border = NA)
-    rect(as.numeric(xrange[num_months] + 150), 5.25, as.numeric(xrange[num_months]) + 5000, 18, col = "cyan2", border = NA)
+    rect(as.numeric(xrange[num_months] + 150), -50, as.numeric(xrange[num_months]) + 5000, 5, col = "cyan1", border = NA)
+    rect(as.numeric(xrange[num_months] + 150), 5, as.numeric(xrange[num_months]) + 5000, 18, col = "cyan2", border = NA)
     rect(as.numeric(xrange[num_months] + 150), 18, as.numeric(xrange[num_months]) + 5000, 30, col = "cyan3", border = NA)
     rect(as.numeric(xrange[num_months] + 150), 30, as.numeric(xrange[num_months]) + 5000, 40, col = "cyan4", border = NA)
     rect(as.numeric(xrange[num_months] + 150), 40, as.numeric(xrange[num_months]) + 5000, 80, col = "deepskyblue4", border = NA)
     axis(4, c(olig_p, 6, 19, 31, 41), c(olig, meso, poly, eu, hyper), tick = F, padj = -4.5, hadj = 0, font = 2)
-    axis(4, c(5.25, 18, 30, 40), c(5, 18, 30, 40), lwd.ticks = 0.5, tck = 0.06, las = 1, cex.axis = 1.25)
+    axis(4, c(5, 18, 30, 40), c(5, 18, 30, 40), lwd.ticks = 0.5, tck = 0.06, las = 1, cex.axis = 1.25)
+    axis(4, 0:50, F, lwd.ticks = 0.5, tck = 0.01)
     mtext("Period of record values and estuarine salinity ranges, in practical salinity units", 4, 2.75, cex = 1.15)
     if (leg) {
       fst <- which(!is.na(sal[, j + 2]))[1]
