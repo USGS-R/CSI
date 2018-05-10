@@ -37,8 +37,10 @@ CSIplot <- function (csi, dir = paste0(getwd(), "/csi_plots"), leg = T) {
   for (j in 1:num_sites)
     for (i in 1:scale) {
       bin <- cut(unlist(csi[, i, j]), csi.breaks, labels = F)
+      st <- which(!is.na(sal[, j + 2]))[1]
+      en <- rev(which(!is.na(sal[, j + 2])))[1]
       mwa <- NULL # Moving-window average of same length as scale
-      for (k in 1:(num_months - i + 1))
+      for (k in st:(en - i + 1))
         mwa[k] <- mean(sal[k:(k + i - 1), j + 2], na.rm = T)
       mwa <- c(rep(NA, num_months - length(mwa)), mwa) # pad
       png(filename = paste0(dir, "/", dimnames(csi)[[3]][j], "_interval", i, ".png"), width = 1724, height = 614, units = "px", pointsize = 12)
