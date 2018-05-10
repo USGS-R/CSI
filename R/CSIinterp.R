@@ -37,7 +37,7 @@ CSIinterp <- function (sal_na, limit = 6) {
     }
     else {
       sal[, j + 2] <-sal_na[, j + 2]
-      message(paste0(names(sal_na)[j + 2], ": no internal NAs detected"))
+      message(paste0(names(sal_na)[j + 2], ": no gpas detected"))
     }
   }
   names(sal) <- names(sal_na)
