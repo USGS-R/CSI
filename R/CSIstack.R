@@ -38,7 +38,7 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, gr
       mwa[k, j] <- mean(sal[k:(k + 11), j + 2], na.rm = T)
   mwa <- rbind(array(NA, c(11, num_sites)), mwa)
   for (j in 1:num_sites) {
-    max <- if (grouped) ceiling(max(mwa, na.rm = T)) else max(mwa[, j], na.rm = T) * 1.1
+    max <- if (grouped) ceiling(max(mwa, na.rm = T)) * 1.1 else max(mwa[, j], na.rm = T) * 1.1
     scale <- dim(csi)[2]
     int_ht <- max / scale # Height of scale interval for stacked plot
     olig <- if (max > 41) "Olig." else "Oligohaline"
@@ -46,7 +46,7 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, gr
     meso <- if (max > 6.25) "Mesohaline" else NA
     poly <- if (max > 20.25) "Polyhaline" else NA
     eu <- if (max > 32) "Euhaline" else NA
-    hyper <- if (max > 45) "Hypersaline" else if (max > 40) "Hyper." else NA
+    hyper <- if (max > 46) "Hypersaline" else if (max > 42.5) "Hyper" else NA
     if (thumbs) {
       png(filename = paste0(dir, "/", dimnames(csi)[[3]][j], "_stacked_thumb.png"), width = 360, height = 150, units = "px", pointsize = 2)
       par(mar = c(0, 0, 0, 0) + .1)
