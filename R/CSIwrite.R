@@ -26,7 +26,7 @@ CSIwrite <- function (csi, dir = paste0(getwd(), "/csi_values")) {
   write("Final data used for CSI calculation:", paste0(dir, "/CSI_calculation_data.txt"))
   write.table(sal, paste0(dir, "/CSI_calculation_data.txt"), sep=",", row.names = F, quote = F, append = T)
   write("Statistics for CSI data calculation:\n", paste0(dir, "/gage_stats.txt"))
-  write(paste0("Data range: ", sal$Year[1], "-", sal$Month[1], " to ", rev(sal$Year)[1], "-", rev(sal$Month)[1]), paste0(dir, "/gage_stats.txt"), append = T)
+  write(paste0("Data range: ", sal$Year[1], "-", sal$Month[1], " to ", rev(sal$Year)[1], "-", rev(sal$Month)[1], " (", length(sal$Year), " months)"), paste0(dir, "/gage_stats.txt"), append = T)
   write("\nGage statistics: ", paste0(dir, "/gage_stats.txt"), append = T)
   sum <- summary(sal)[, 3:dim(sal)[2]]
   capture.output(sum, file = paste0(dir, "/gage_stats.txt"), append = T)

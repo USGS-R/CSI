@@ -6,8 +6,8 @@
 #' @param dir character Directory to write output files to.
 #'
 #' @importFrom grDevices dev.off png
-#' @importFrom graphics axis par plot rect text points
-#' @importFrom stats ecdf
+#' @importFrom graphics par plot rect hist
+#' @importFrom stats dnorm
 #'
 #' @export
 #'
@@ -18,7 +18,7 @@
 #' csi <- CSIcalc(sal)
 #' CSIcumper(csi)
 #'
-CSIcumper <- function (csi, dir = paste0(getwd(), "/csi_dist")) {
+CSIdist <- function (csi, dir = paste0(getwd(), "/csi_dist")) {
   if (!(length(dir) == 1) || !is.character(dir))
     stop("dir must be a single character string")
   if (!dir.exists(dir)) dir.create(dir)
@@ -31,7 +31,6 @@ CSIcumper <- function (csi, dir = paste0(getwd(), "/csi_dist")) {
     for (j in 1:scale) {
       t <- csi[, j, i]
       t <- t[!is.na(t)]
-      s <- ecdf(t)
       br <- NULL
       for (k in 2:11) br[k - 1] <- which.min(abs(t - csi.breaks[k]))
       mn <- paste0(dimnames(csi)[[3]][i], " ", j, "-Month Coastal Salinity Index Distribution")
