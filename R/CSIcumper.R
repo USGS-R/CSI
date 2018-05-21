@@ -32,8 +32,6 @@ CSIcumper <- function (csi, dir = paste0(getwd(), "/csi_cumper")) {
       t <- csi[, j, i]
       t <- t[!is.na(t)]
       s <- ecdf(t)
-      br <- NULL
-      for (k in 2:11) br[k - 1] <- which.min(abs(t - csi.breaks[k]))
       mn <- paste0(dimnames(csi)[[3]][i], " ", j, "-Month Coastal Salinity Index Cumulative Percentage")
       if (attr(csi, "lmode")) mn <- paste(mn, "(using L moments)")
       png(filename = paste0(dir, "/", dimnames(csi)[[3]][i], "_cumper_", j, ".png"), width = 1150, height = 614, units = "px", pointsize = 12)

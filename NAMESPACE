@@ -2,6 +2,7 @@
 
 export(CSIcalc)
 export(CSIcumper)
+export(CSIdist)
 export(CSIimport)
 export(CSIimport_24hour)
 export(CSIimport_daily)

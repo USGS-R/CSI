@@ -1,6 +1,6 @@
-#' @title Create cumulative percentage CSI plots for sites
+#' @title Create distribution plots of CSI values for sites
 #'
-#' @description For each site (layer) in the csi object, plot the intervals (columns) on a cumulative percentage plot.
+#' @description For each site (layer) in the csi object, plot the intervals (columns) on a distribution plot.
 #'
 #' @param csi array A 3D array of CSI values with dimensions of number of months covered, scale of months analysed (typically 1-24), and number of sites.
 #' @param dir character Directory to write output files to.
@@ -16,7 +16,7 @@
 #' data_path <- system.file("extdata", "Monthly_Coastal_EDEN.csv", package = "CSI")
 #' sal <- CSIimport_monthly(data_path)
 #' csi <- CSIcalc(sal)
-#' CSIcumper(csi)
+#' CSIdist(csi)
 #'
 CSIdist <- function (csi, dir = paste0(getwd(), "/csi_dist")) {
   if (!(length(dir) == 1) || !is.character(dir))
@@ -27,12 +27,10 @@ CSIdist <- function (csi, dir = paste0(getwd(), "/csi_dist")) {
   num_sites <- dim(csi)[3]
   num_months <- dim(csi)[1]
   scale <- dim(csi)[2]
-  for (i in 1:num_sites) {
+  for (i in 1:num_sites)
     for (j in 1:scale) {
       t <- csi[, j, i]
       t <- t[!is.na(t)]
-      br <- NULL
-      for (k in 2:11) br[k - 1] <- which.min(abs(t - csi.breaks[k]))
       mn <- paste0(dimnames(csi)[[3]][i], " ", j, "-Month Coastal Salinity Index Distribution")
       if (attr(csi, "lmode")) mn <- paste(mn, "(using L moments)")
       png(filename = paste0(dir, "/", dimnames(csi)[[3]][i], "_dist_", j, ".png"), width = 1150, height = 614, units = "px", pointsize = 12)
@@ -56,5 +54,4 @@ CSIdist <- function (csi, dir = paste0(getwd(), "/csi_dist")) {
       lines(xfit, yfit, lwd = 3)
       dev.off()
     }
-  }
 }
