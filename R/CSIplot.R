@@ -29,12 +29,15 @@ CSIplot <- function (csi, dir = paste0(getwd(), "/csi_plots"), leg = T) {
   xrange <- seq.Date(as.Date(paste(dimnames(csi)[[1]][1], "01", sep = "-")), as.Date(paste(rev(dimnames(csi)[[1]])[1], "01" , sep = "-")), by = "month")
   xrange2 <- xrange + 15 # Offset to plot midmonth
   sal <- attr(csi, "sal")
+  filled_gaps <- attr(csi, "filled_gaps")
   max <- ceiling(max(sal[, 3:dim(sal)[2]], na.rm = T))
   num_sites <- dim(csi)[3]
   num_months <- dim(csi)[1]
   scale <- dim(csi)[2]
 
-  for (j in 1:num_sites)
+  for (j in 1:num_sites) {
+    gaps <- filled_gaps[[paste0(dimnames(csi)[[3]][j], "_filled_gaps")]]
+    gaplengths <- filled_gaps[[paste0(dimnames(csi)[[3]][j], "_filled_gaps_len")]]
     for (i in 1:scale) {
       bin <- cut(unlist(csi[, i, j]), csi.breaks, labels = F)
       st <- which(!is.na(sal[, j + 2]))[1]
@@ -48,6 +51,12 @@ CSIplot <- function (csi, dir = paste0(getwd(), "/csi_plots"), leg = T) {
       plot(xrange, sal[, j + 2], type = "n", ylim = c(0, max), ylab = paste0(i, "-month average salinity (PPT)"), xlab = "Date", main = paste0(dimnames(csi)[[3]][j], " ", i, "-month CSI (background) and ", i, "-month average salinity (black trace)"), xaxt = "n", tck = 0.02, cex.axis = 1.25, cex.lab = 1.25, las = 1)
       for (k in 1:num_months) rect(as.numeric(xrange[k]), 0, as.numeric(xrange[k + 1]), 56, col = csi.cols[bin[k]], border = NA)
       for (k in which(!is.na(bin))[1]:rev(which(!is.na(bin)))[1]) if (is.na(bin[k])) rect(as.numeric(xrange[k]), 0, as.numeric(xrange[k + 1]), 56, col = "gray25", border = NA)
+      if (i == 1 & !is.null(gaps))
+        for (k in 1:length(gaps)) {
+          st <- as.Date(paste0(gaps[k], "-01"))
+          en <- seq(st, by = paste(gaplengths[k], "month"), length = 2)[2]
+          rect(st, 0, en, max * 1.035, border = "limegreen", lwd = 3)
+        }
       axis(1, as.numeric(seq.Date(as.Date(paste0(sal$Year[1], "/1/1")), as.Date(paste0(sal$Year[num_months], "/1/1")), by = "year")), sal$Year[1]:sal$Year[num_months], tck = 0.02, cex.axis = 1.25)
       #    par(new=T) # Optional 1-month interval line. To remove, comment out from this line...
       #    plot(xrange,csi[,1,j],type="l",ylim=range(csi,na.rm=T),xaxt="n",yaxt="n",xlab="",ylab="",lwd=3,col="dodgerblue")
@@ -58,7 +67,12 @@ CSIplot <- function (csi, dir = paste0(getwd(), "/csi_plots"), leg = T) {
       if (leg) {
         fst <- which(!is.na(sal[, j + 2]))[1]
         lst <- tail(which(!is.na(sal[, j + 2])), 1)
-        tmp <- legend("topleft", c("", "", "", "", "", "", "", "", "", paste0(i, "-month rolling salinity average")), lty = c(NA, NA, NA, NA, NA, NA, NA, NA, NA, 1), lwd = c(NA, NA, NA, NA, NA, NA, NA, NA, NA, 3), col = c(NA, NA, NA, NA, NA, NA, NA, NA, NA, "black"), inset = c(0.01, 0.01), title = expression(bold("EXPLANATION")))
+        leg_txt <- c("", "", "", "", "", "", "", "", "", paste0(i, "-month rolling salinity average"))
+        leg_lty <- c(NA, NA, NA, NA, NA, NA, NA, NA, NA, 1)
+        leg_lwd <- c(NA, NA, NA, NA, NA, NA, NA, NA, NA, 3)
+        leg_col <- c(NA, NA, NA, NA, NA, NA, NA, NA, NA, "black")
+        if (i == 1 & !is.null(gaps)) { leg_txt[11] <- "Interpolated data"; leg_lty[11] <- 1; leg_lwd[11] <- 3; leg_col[11] <- "limegreen" }
+        tmp <- legend("topleft", leg_txt, lty = leg_lty, lwd = leg_lwd, col = leg_col, inset = c(0.01, 0.01), title = expression(bold("EXPLANATION")))
         text(tmp$rect$left + tmp$rect$w, tmp$text$y[1:2], c("CD, coastal drought; CW, coastal wet", paste0("Period of record: ", sal$Month[fst], "/", sal$Year[fst], " - ", sal$Month[lst], "/", sal$Year[lst])), pos = 2)
         par(usr = c(0, 1, 0, 1))
         rect(c(0.028, 0.028, 0.028, 0.028, 0.028, 0.053, 0.091, 0.091, 0.091, 0.091, 0.091), c(0.834, 0.796, 0.758, 0.720, 0.682, 0.682, 0.834, 0.796, 0.758, 0.720, 0.682), c(0.048, 0.048, 0.048, 0.048, 0.048, 0.086, 0.111, 0.111, 0.111, 0.111, 0.111), c(0.866, 0.828, 0.790, 0.752, 0.714, 0.714, 0.866, 0.828, 0.790, 0.752, 0.714), lwd = 2, col = c(csi.cols[1:6], rev(csi.cols[7:11])))
@@ -66,4 +80,5 @@ CSIplot <- function (csi, dir = paste0(getwd(), "/csi_plots"), leg = T) {
       }
       dev.off()
     }
+  }
 }
