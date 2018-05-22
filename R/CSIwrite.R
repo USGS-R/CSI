@@ -23,7 +23,9 @@ CSIwrite <- function (csi, dir = paste0(getwd(), "/csi_values")) {
 
   sal <- attr(csi, "sal")
   options(warn = -1)
-  write("Final data used for CSI calculation:", paste0(dir, "/CSI_calculation_data.txt"))
+  txt <- "Final data used for CSI calculation"
+  txt <- if (attr(csi, "lmode")) paste0(txt, " (L-moments used):") else paste0(txt, ":")
+  write(txt, paste0(dir, "/CSI_calculation_data.txt"))
   write.table(sal, paste0(dir, "/CSI_calculation_data.txt"), sep=",", row.names = F, quote = F, append = T)
   write("Statistics for CSI data calculation:\n", paste0(dir, "/gage_stats.txt"))
   write(paste0("Data range: ", sal$Year[1], "-", sal$Month[1], " to ", rev(sal$Year)[1], "-", rev(sal$Month)[1], " (", length(sal$Year), " months)"), paste0(dir, "/gage_stats.txt"), append = T)
