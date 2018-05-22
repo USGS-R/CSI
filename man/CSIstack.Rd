@@ -5,7 +5,7 @@
 \title{Create stacked CSI interval plots for sites}
 \usage{
 CSIstack(csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F,
-  grouped = T)
+  grouped = T, leg = T)
 }
 \arguments{
 \item{csi}{array A 3D array of CSI values with dimensions of number of months covered, scale of months analysed (typically 1-24), and number of sites.}
@@ -15,6 +15,8 @@ CSIstack(csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F,
 \item{thumbs}{logical. If true, thumbnail plots will be generated in addition to full-sized plots.}
 
 \item{grouped}{logical. If true, second y-asix (salinity) will be the same across all output plots.}
+
+\item{leg}{logical. If true, legend will be displayed in upper left corner.}
 }
 \description{
 For each site (layer) in the csi object, plot the intervals (columns) on a stacked plot.

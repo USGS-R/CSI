@@ -4,12 +4,14 @@
 \alias{CSIcalc}
 \title{Calculate CSI values from salinity object}
 \usage{
-CSIcalc(sal, scale = 24)
+CSIcalc(sal, scale = 24, lmode = FALSE)
 }
 \arguments{
 \item{sal}{data.frame with Year and Month timestamp columns, with columns of site salinity values. Generally created by one of the CSIimport_ family functions.}
 
 \item{scale}{integer representing the scale at which the CSI will be computed. For example, a value of six would imply that data from the current month and of the past five months will be used for computing the CSI value for a given month.}
+
+\item{lmode}{logical. If true, L-moments are used in calculating alpha and beta parameters of gamma distribution as per SPEI package and Vicente-Serrano et al., 2010. If false (default), no L-moments are used, and gamma distribution parameters are caluclated directly from the observed data as per National Drought Mitigation Center (http://drought.unl.edu/MonitoringTools/DownloadableSPIProgram.aspx) and McKee et al., 1993.}
 }
 \value{
 A 3D array of CSI values with dimensions of number of months covered, scale of months analysed (typically 1-24), and number of sites.
