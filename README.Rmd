@@ -9,14 +9,14 @@ output:
 
 #`CSI`
 
-A package with really awesome functions that are used to help creating amazingly awesome products.
+Calculate the monthly Coastal Salinity Index (CSI) for monthly, daily, or interval salinity or specific conductance data for suites of gages.
 
 ## Installation instructions
 
-To install the myAwesomePackage package, you must be using R 3.0 or greater and run the following command:
+To install the CSI package, you must be using R 3.0 or greater and run the following command:
 
 ```{r, eval=FALSE}
-devtools::install_github("bmccloskey/CSI")
+devtools::install_github("USGS-EDEN/CSI")
 ```
 
 ##Reporting bugs
