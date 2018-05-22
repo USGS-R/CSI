@@ -22,7 +22,8 @@ Read in unit value salinity file.
 # sal <- CSIimport_unit(data_path)
 
 # Data file with single Timestamp column
-data_path <- system.file("extdata", "Unitvalue_North_Inlet.csv", package="CSI")
-sal <- CSIimport_unit(data_path)
+data_path <- system.file("extdata", "Unitvalue_North_Inlet.csv.zip", package="CSI")
+unzip(data_path)
+sal <- CSIimport_unit("Unitvalue_North_Inlet.csv")
 
 }

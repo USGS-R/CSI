@@ -5,7 +5,7 @@
 #' @param csi array A 3D array of CSI values with dimensions of number of months covered, scale of months analysed (typically 1-24), and number of sites.
 #' @param dir character Directory to write output files to.
 #'
-#' @importFrom utils write.table
+#' @importFrom utils write.table capture.output
 #'
 #' @export
 #'
