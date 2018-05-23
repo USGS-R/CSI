@@ -71,6 +71,7 @@ CSIcalc <- function (sal, scale = 24, lmode = FALSE) {
   attr(csi, "sal") <- sal
   attr(csi, "lmode") <- lmode
   attr(csi, "filled_gaps") <- attr(sal, "filled_gaps")
+  attr(csi, "interpolation_method") <- attr(sal, "interpolation_method")
 
   return(csi)
 }

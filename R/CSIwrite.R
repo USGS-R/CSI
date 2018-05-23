@@ -37,7 +37,8 @@ CSIwrite <- function (csi, dir = paste0(getwd(), "/csi_values")) {
     write.table(csi[, , j], paste0(dir, "/", dimnames(csi)[[3]][j], ".csv"), sep=",", col.names = NA)
   if (length(attr(csi, "filled_gaps"))) {
     filled_gaps <- attr(csi, "filled_gaps")
-    write("Linearly interpolated gaps filled for CSI calculation:", paste0(dir, "/filled_gaps.txt"))
+    txt2 <- if (attr(csi, "interpolation_method") == "linear") "Linearly" else "Cubic spline"
+    write(paste(txt2, "interpolated gaps filled for CSI calculation:"), paste0(dir, "/filled_gaps.txt"))
     for (j in seq(1, length(filled_gaps), by = 2)) {
       write(paste0("\nGaps filled for ", substr(names(filled_gaps)[j], 1, nchar((names(filled_gaps)[j])) - 12), ":"), paste0(dir, "/filled_gaps.txt"), append = T)
       write(filled_gaps[[j]], paste0(dir, "/filled_gaps.txt"), append = T)
