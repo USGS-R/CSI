@@ -4,15 +4,17 @@
 \alias{CSIinterp}
 \title{Interpolate missing values for salinity object}
 \usage{
-CSIinterp(sal_na, limit = 6)
+CSIinterp(sal_na, limit = 6, method = "linear")
 }
 \arguments{
 \item{sal_na}{data.frame with Year and Month timestamp columns, with columns of site salinity values. Generally created by one of the CSIimport_ family functions.}
 
 \item{limit}{numeric. Limit length of months of gap to interpolate (default 6).}
+
+\item{method}{character. Method used to interpolate data. Dfault is "linear"; optionally "spline" for cubic spline interplation.}
 }
 \value{
-A data.frame with Year and Month timestamp columns, with columns of site salinity values, with interpolated internal NAs. A "filled_gaps" attribute will be added to the salinity object listing the data and duration of gaps filled.
+A data.frame with Year and Month timestamp columns, with columns of site salinity values, with interpolated internal NAs. A "filled_gaps" attribute will be added to the salinity object listing the data and duration of gaps filled, and an "interpolation_method" attribute containing the method.
 }
 \description{
 Interpolate missing monthly salinity values from salinity object for a set of sites between the first and last measured values.

@@ -4,10 +4,11 @@
 #'
 #' @param sal_na data.frame with Year and Month timestamp columns, with columns of site salinity values. Generally created by one of the CSIimport_ family functions.
 #' @param limit numeric. Limit length of months of gap to interpolate (default 6).
+#' @param method character. Method used to interpolate data. Dfault is "linear"; optionally "spline" for cubic spline interplation.
 #'
-#' @return A data.frame with Year and Month timestamp columns, with columns of site salinity values, with interpolated internal NAs. A "filled_gaps" attribute will be added to the salinity object listing the data and duration of gaps filled.
+#' @return A data.frame with Year and Month timestamp columns, with columns of site salinity values, with interpolated internal NAs. A "filled_gaps" attribute will be added to the salinity object listing the data and duration of gaps filled, and an "interpolation_method" attribute containing the method.
 #'
-#' @importFrom zoo na.approx
+#' @importFrom zoo na.approx na.spline
 #'
 #' @export
 #'
@@ -17,7 +18,7 @@
 #' sal_na <- CSIimport_daily(data_path)
 #' sal <- CSIinterp(sal_na)
 #'
-CSIinterp <- function (sal_na, limit = 6) {
+CSIinterp <- function (sal_na, limit = 6, method = "linear") {
   if (!(dim(sal_na)[1] >= 1) || !(dim(sal_na)[2] >= 3) || !is.data.frame(sal_na) || !any(names(sal_na) == 'Year') || !any(names(sal_na) == 'Month'))
     stop("sal_na must me a data.frame with Year and Month columns, and colums of site salinity values")
   if (!is.numeric(limit) | is.na(limit)) limit <- Inf
@@ -30,7 +31,8 @@ CSIinterp <- function (sal_na, limit = 6) {
     last_meas <- rev(which(!is.na(sal_na[, j + 2])))[1]
     filled_num <- unfilled_num <- 0
     if (any(which(is.na(sal_na[, j + 2])) > first_meas & which(is.na(sal_na[, j + 2])) < last_meas)) {
-      sal[first_meas:last_meas, j + 2] <- na.approx(sal_na[first_meas:last_meas, j + 2], maxgap = limit)
+      sal[first_meas:last_meas, j + 2] <- if (method == "spline") na.spline(sal_na[first_meas:last_meas, j + 2], maxgap = limit)
+        else na.approx(sal_na[first_meas:last_meas, j + 2], maxgap = limit)
       runs <- rle(is.na(sal_na[first_meas:last_meas, j + 2]))
       filled_num <- sum(runs$lengths <= limit & runs$values == T)
       unfilled_num <- sum(runs$lengths > limit & runs$values == T)
@@ -51,6 +53,7 @@ CSIinterp <- function (sal_na, limit = 6) {
   }
   names(sal) <- names(sal_na)
   attr(sal, "filled_gaps") <- filled_gaps_attr
+  attr(sal, "interpolation_method") <- method
 
   return(sal)
 }
