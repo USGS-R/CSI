@@ -33,6 +33,7 @@ CSIinterp <- function (sal_na, limit = 6, method = "linear") {
     if (any(which(is.na(sal_na[, j + 2])) > first_meas & which(is.na(sal_na[, j + 2])) < last_meas)) {
       sal[first_meas:last_meas, j + 2] <- if (method == "spline") na.spline(sal_na[first_meas:last_meas, j + 2], maxgap = limit)
         else na.approx(sal_na[first_meas:last_meas, j + 2], maxgap = limit)
+      sal[which(sal[, j + 2] <= 0), j + 2] <- 0.01 # Prevent negative values
       runs <- rle(is.na(sal_na[first_meas:last_meas, j + 2]))
       filled_num <- sum(runs$lengths <= limit & runs$values == T)
       unfilled_num <- sum(runs$lengths > limit & runs$values == T)
