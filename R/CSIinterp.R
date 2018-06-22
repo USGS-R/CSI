@@ -25,14 +25,14 @@ CSIinterp <- function (sal_na, limit = 6, method = "linear") {
   num_sites <- dim(sal_na)[2] - 2 # number of sites in data set, removing Year and Month columns
 
   sal <- sal_na[, 1:2]
-  filled_gaps_attr <- NULL
+  filled_gaps_attr <- list(NULL)
   for (j in 1:num_sites) { # check for internal NAs
     first_meas <- which(!is.na(sal_na[, j + 2]))[1]
     last_meas <- rev(which(!is.na(sal_na[, j + 2])))[1]
     filled_num <- unfilled_num <- 0
     if (any(which(is.na(sal_na[, j + 2])) > first_meas & which(is.na(sal_na[, j + 2])) < last_meas)) {
-      sal[first_meas:last_meas, j + 2] <- if (method == "spline") { na.spline(sal_na[first_meas:last_meas, j + 2], maxgap = limit) 
-        } else na.approx(sal_na[first_meas:last_meas, j + 2], maxgap = limit)
+      sal[first_meas:last_meas, j + 2] <- if (method == "spline") { na.spline(sal_na[first_meas:last_meas, j + 2], maxgap = limit)
+        } else { na.approx(sal_na[first_meas:last_meas, j + 2], maxgap = limit) }
       sal[which(sal[, j + 2] <= 0), j + 2] <- 0.01 # Prevent negative values
       runs <- rle(is.na(sal_na[first_meas:last_meas, j + 2]))
       filled_num <- sum(runs$lengths <= limit & runs$values == T)
