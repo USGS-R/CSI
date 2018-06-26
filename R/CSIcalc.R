@@ -33,7 +33,7 @@ CSIcalc <- function (sal, scale = 24, lmode = FALSE) {
     st <- which(!is.na(sal[, j]))[1]
     en <- rev(which(!is.na(sal[, j])))[1]
     start_year <- as.numeric(sal$Year[st])
-    start_month <- as.numeric(sal$Month[en])
+    start_month <- as.numeric(sal$Month[st])
     data <- ts(as.matrix(sal[st:en, j]), start = c(start_year, start_month), frequency = 12)
     colnames(data) <- colnames(sal)[j]
     x <- matrix(NA, length(data), scale) # temp matrix to hold site CSIs
