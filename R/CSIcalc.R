@@ -51,6 +51,7 @@ CSIcalc <- function (sal, scale = 24, lmode = FALSE) {
         month <- sort(a[f])
         if (length(month) == 0 | is.na(sd(month, na.rm = T)) | sd(month, na.rm = T) == 0)
           (next)()
+        gampar <- NULL
         if (!lmode) {
           tmp <- try (fitdistr(month[month > 0], "gamma"), silent = T)
           if (inherits(tmp, "try-error")) tmp <- fitdistr(month[month > 0], "gamma", lower = c(0, 0))
