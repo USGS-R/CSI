@@ -49,18 +49,19 @@ CSIcalc <- function (sal, scale = 24, lmode = FALSE) {
         f <- which(cycle(a) == c)
         f <- f[!is.na(a[f])]
         month <- sort(a[f])
-        if (length(month) == 0 | is.na(sd(month, na.rm = T)) | sd(month, na.rm = T) == 0) {
-          x[f, i] <- NA
+        if (length(month) == 0 | is.na(sd(month, na.rm = T)) | sd(month, na.rm = T) == 0)
           (next)()
-        }
-        pwm <- pwm.ub(month[month > 0])
-        lmom <- pwm2lmom(pwm)
-        if (!are.lmom.valid(lmom) | is.na(sum(lmom[[1]])) | is.nan(sum(lmom[[1]])))
-          (next)()
-        gampar <- pargam(lmom)
         if (!lmode) {
-          tmp <- fitdistr(month[month > 0], "gamma")
+          tmp <- try (fitdistr(month[month > 0], "gamma"), silent = T)
+          if (inherits(tmp, "try-error")) tmp <- fitdistr(month[month > 0], "gamma", lower = c(0, 0))
           gampar$para <- c(tmp$estimate[1], 1 / tmp$estimate[2]) # overwrite gamma parameters
+          gampar$type <- "gam"
+        } else {
+          pwm <- pwm.ub(month[month > 0])
+          lmom <- pwm2lmom(pwm)
+          if (!are.lmom.valid(lmom) | is.na(sum(lmom[[1]])) | is.nan(sum(lmom[[1]])))
+            (next)()
+          gampar <- pargam(lmom)
         }
         x[f, i] <- qnorm(cdfgam(a[f], gampar))
       }
