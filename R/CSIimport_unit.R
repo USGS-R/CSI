@@ -36,10 +36,10 @@ CSIimport_unit <- function (file) {
     sal <- sal[, -which(names(sal) == 'Timestamp')]
   }
   sal <- group_by(sal, Year, Month)
-  sal <- summarize_all(sal, mean, na.rm = T)
   if (any(names(sal) == 'Date')) sal <- sal[, -which(names(sal) == 'Date')]
   if (any(names(sal) == 'Day')) sal <- sal[, -which(names(sal) == 'Day')]
   if (any(names(sal) == 'Time')) sal <- sal[, -which(names(sal) == 'Time')]
+  sal <- summarize_all(sal, mean, na.rm = T)
   sal <- as.data.frame(sal)
 
   return(sal)

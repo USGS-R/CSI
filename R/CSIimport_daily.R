@@ -34,8 +34,8 @@ CSIimport_daily <- function (file) {
     sal <- sal[, -which(names(sal) == 'Date')]
   }
   sal <- group_by(sal, Year, Month)
-  sal <- summarize_all(sal, mean, na.rm = T)
   if (any(names(sal) == 'Day')) sal <- sal[, -which(names(sal) == 'Day')]
+  sal <- summarize_all(sal, mean, na.rm = T)
   sal <- as.data.frame(sal)
 
   return(sal)
