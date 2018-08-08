@@ -4,7 +4,7 @@
 #'
 #' @param file character The daily-value file to import. Must have Year, Month, and Day columns, or single column Date = 'YYYY-MM-DD', and columns of salinty values by site.
 #'
-#' @return A data.frame with Year and Month timestamp columns, with columns of site salinity values.
+#' @return A salinity object data.frame for calculating CSI values; has Year and Month timestamp columns, with (optionally multiple) individual columns of site salinity values.
 #'
 #' @importFrom utils read.csv
 #' @importFrom dplyr group_by summarize_all

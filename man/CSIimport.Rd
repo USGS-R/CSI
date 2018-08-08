@@ -13,7 +13,7 @@ CSIimport(file, interval = c("monthly", "daily", "24hour", "interval",
 \item{interval}{character The timestamp frequency -- 'daily', 'interval'/'unit', or 'monthly' (default).}
 }
 \value{
-A data.frame with Year and Month timestamp columns, with columns of site salinity values.
+A salinity object data.frame for calculating CSI values; has Year and Month timestamp columns, with (optionally multiple) individual columns of site salinity values.
 }
 \description{
 Read in salinity values files of various intervals.
