@@ -4,7 +4,7 @@
 #'
 #' @param sc data.frame with Year and Month timestamp columns (e.g., produced by CSIimport_ family functions), with columns of site specific conductance values.
 #'
-#' @return A data.frame with Year and Month timestamp columns, with columns of site salinity values.
+#' @return A salinity object data.frame for calculating CSI values; has Year and Month timestamp columns, with (optionally multiple) individual columns of site salinity values.
 #'
 #' @export
 #'

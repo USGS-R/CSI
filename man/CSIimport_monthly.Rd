@@ -10,7 +10,7 @@ CSIimport_monthly(file)
 \item{file}{character The monthly-value file to import. Must have Year and Month columns, or single YearMo column = 'YYYY-MM', and columns of salinty values by site.}
 }
 \value{
-A data.frame with Year and Month timestamp columns, with columns of site salinity values.
+A salinity object data.frame for calculating CSI values; has Year and Month timestamp columns, with (optionally multiple) individual columns of site salinity values.
 }
 \description{
 Read in monthly salinity values file.

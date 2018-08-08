@@ -10,7 +10,7 @@ CSIspec_con(sc)
 \item{sc}{data.frame with Year and Month timestamp columns (e.g., produced by CSIimport_ family functions), with columns of site specific conductance values.}
 }
 \value{
-A data.frame with Year and Month timestamp columns, with columns of site salinity values.
+A salinity object data.frame for calculating CSI values; has Year and Month timestamp columns, with (optionally multiple) individual columns of site salinity values.
 }
 \description{
 Convert specific conductance values to salinity values for a set of sites.

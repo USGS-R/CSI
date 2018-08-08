@@ -5,7 +5,7 @@
 #' @param file character The file to import.
 #' @param interval character The timestamp frequency -- 'daily', 'interval'/'unit', or 'monthly' (default).
 #'
-#' @return A data.frame with Year and Month timestamp columns, with columns of site salinity values.
+#' @return A salinity object data.frame for calculating CSI values; has Year and Month timestamp columns, with (optionally multiple) individual columns of site salinity values.
 #'
 #' @importFrom utils read.csv
 #'
