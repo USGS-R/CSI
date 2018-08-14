@@ -14,12 +14,12 @@
 #' @examples
 #' # Data file with Year, Month, Day, and Time columns
 #' data_path <- system.file("extdata", "Unitvalue_North_Inlet_ymdt.csv.zip", package="CSI")
-#' unzip(data_path, exdir = "inst/extdata")
+#' unzip(data_path, exdir = getwd())
 #' sal <- CSIimport_unit("Unitvalue_North_Inlet_ymdt.csv")
 #'
 #' # Data file with single Timestamp column
 #' data_path <- system.file("extdata", "Unitvalue_North_Inlet.csv.zip", package="CSI")
-#' unzip(data_path, exdir = "inst/extdata")
+#' unzip(data_path, exdir = getwd())
 #' sal <- CSIimport_unit("Unitvalue_North_Inlet.csv")
 #'
 CSIimport_unit <- function (file) {

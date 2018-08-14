@@ -5,12 +5,12 @@
 \title{Import salinity value files.}
 \usage{
 CSIimport(file, interval = c("monthly", "daily", "24hour", "interval",
-  "unit"))
+  "unit", "NERRS"))
 }
 \arguments{
 \item{file}{character The file to import.}
 
-\item{interval}{character The timestamp frequency -- 'daily', 'interval'/'unit', or 'monthly' (default).}
+\item{interval}{character The timestamp frequency -- 'daily', 'interval'/'unit', or 'monthly' (default). Alternatively, 'NERRS' can be used to import NERRS-format data.}
 }
 \value{
 A salinity object data.frame for calculating CSI values; has Year and Month timestamp columns, with (optionally multiple) individual columns of site salinity values.

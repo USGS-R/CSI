@@ -18,7 +18,7 @@ Read in NERRS-format unit value salinity file.
 \examples{
 # NERRS-format data file
 data_path <- system.file("extdata", "NIWDCWQ.csv.zip", package="CSI")
-unzip(data_path)
-sal <- CSIimport_NERRS("NIWDCWQ.csv")
+#unzip(data_path, exdir = getwd())
+#sal <- CSIimport_NERRS("NIWDCWQ.csv")
 
 }
