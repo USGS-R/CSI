@@ -14,7 +14,7 @@
 #' @examples
 #' # NERRS-format data file
 #' data_path <- system.file("extdata", "NIWDCWQ.csv.zip", package="CSI")
-#' unzip(data_path)
+#' unzip(data_path, exdir = "inst/extdata")
 #' sal <- CSIimport_NERRS("NIWDCWQ.csv")
 #'
 CSIimport_NERRS <- function (file) {
@@ -27,11 +27,11 @@ CSIimport_NERRS <- function (file) {
   stn <- sal$Station_Code[1]
   sal <- sal[sal$Station_Code == stn, ]
   sal <- sal[, c("DateTimeStamp", "Sal")]
-  names(sal) <- c("Timestamp", as.character(stn))
+  names(sal) <- c("Timestamp", trimws(as.character(stn)))
 
   Year <- Month <- 'dplyr'
   sal$Date <- as.Date(sal$Timestamp, "%m/%d/%Y")
-  sal$Month <- format(sal$Date, format = "%m")
+  sal$Month <- as.numeric(format(sal$Date, format = "%m"))
   sal$Year <- format(sal$Date, format = "%Y")
   sal <- sal[, -which(names(sal) == 'Timestamp')]
 
@@ -39,6 +39,12 @@ CSIimport_NERRS <- function (file) {
   sal <- sal[, -which(names(sal) == 'Date')]
   sal <- summarize_all(sal, mean, na.rm = T)
   sal <- as.data.frame(sal)
+  # Find missing months and enter empty rows
+  rng <- data.frame(Date = seq.Date(as.Date(paste(sal$Year[1], sal$Month[1], "01", sep = "-")), as.Date(paste(rev(sal$Year)[1], rev(sal$Month)[1], "01" , sep = "-")), by = "month"))
+  rng$Year <- format(rng$Date, format = "%Y")
+  rng$Month <- as.numeric(format(rng$Date, format = "%m"))
+  rng <- rng[, -which(names(rng) == "Date")]
+  sal <- merge(rng, sal, all.x = T)
 
   return(sal)
 }

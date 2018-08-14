@@ -29,7 +29,7 @@ CSIimport_daily <- function (file) {
   Year <- Month <- 'dplyr'
   if (any(names(sal) %in% c('Date', 'date', 'DATE'))) {
     sal$Date <- as.Date(sal$Date)
-    sal$Month <- format(sal$Date, format = "%m")
+    sal$Month <- as.numeric(format(sal$Date, format = "%m"))
     sal$Year <- format(sal$Date, format = "%Y")
     sal <- sal[, -which(names(sal) == 'Date')]
   }
@@ -37,6 +37,12 @@ CSIimport_daily <- function (file) {
   if (any(names(sal) == 'Day')) sal <- sal[, -which(names(sal) == 'Day')]
   sal <- summarize_all(sal, mean, na.rm = T)
   sal <- as.data.frame(sal)
+  # Find missing months and enter empty rows
+  rng <- data.frame(Date = seq.Date(as.Date(paste(sal$Year[1], sal$Month[1], "01", sep = "-")), as.Date(paste(rev(sal$Year)[1], rev(sal$Month)[1], "01" , sep = "-")), by = "month"))
+  rng$Year <- format(rng$Date, format = "%Y")
+  rng$Month <- as.numeric(format(rng$Date, format = "%m"))
+  rng <- rng[, -which(names(rng) == "Date")]
+  sal <- merge(rng, sal, all.x = T)
 
   return(sal)
 }

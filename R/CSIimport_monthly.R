@@ -29,10 +29,16 @@ CSIimport_monthly <- function (file) {
   if (any(names(sal) %in% c('YearMo', 'yearmo', 'YEARMO'))) {
     sal$YearMo <- as.Date(paste0(sal$YearMo, "-01"))
     sal$Year <- format(sal$YearMo, format = "%Y")
-    sal$Month <- format(sal$YearMo, format = "%m")
+    sal$Month <- as.numeric(format(sal$YearMo, format = "%m"))
     sal <- sal[, -which(names(sal) == 'YearMo')]
     sal <- sal[, c(which(names(sal) == 'Year'), which(names(sal) == 'Month'), 1:(dim(sal)[2] - 2))]
   }
+  # Find missing months and enter empty rows
+  rng <- data.frame(Date = seq.Date(as.Date(paste(sal$Year[1], sal$Month[1], "01", sep = "-")), as.Date(paste(rev(sal$Year)[1], rev(sal$Month)[1], "01" , sep = "-")), by = "month"))
+  rng$Year <- format(rng$Date, format = "%Y")
+  rng$Month <- as.numeric(format(rng$Date, format = "%m"))
+  rng <- rng[, -which(names(rng) == "Date")]
+  sal <- merge(rng, sal, all.x = T)
 
   return(sal)
 }
