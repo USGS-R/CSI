@@ -30,11 +30,21 @@ CSIimport_unit <- function (file) {
     stop("File must be a CSV with columns 'Year', 'Month', 'Day', and 'Time', or single column 'Timestamp' = 'YYYY-MM-DD HH:mm:ss', and salinity columns for each site")
   Year <- Month <- 'dplyr'
   if (any(names(sal) %in% c('Timestamp', 'timestamp', 'TIMESTAMP'))) {
+    ts <- which(names(sal) %in% c('Timestamp', 'timestamp', 'TIMESTAMP'))
+    names(sal)[ts] <- 'Timestamp'
     sal$Date <- as.Date(sal$Timestamp)
     sal$Month <- as.numeric(format(sal$Date, format = "%m"))
     sal$Year <- format(sal$Date, format = "%Y")
     sal <- sal[, -which(names(sal) == 'Timestamp')]
   }
+  yr <- which(names(sal) %in% c('Year', 'year', 'YEAR'))
+  names(sal)[yr] <- 'Year'
+  mo <- which(names(sal) %in% c('Month', 'month', 'MONTH'))
+  names(sal)[mo] <- 'Month'
+  dy <- which(names(sal) %in% c('Day', 'day', 'DAY'))
+  names(sal)[dy] <- 'Day'
+  tm <- which(names(sal) %in% c('Time', 'time', 'TIME'))
+  names(sal)[tm] <- 'Time'
   sal <- group_by(sal, Year, Month)
   if (any(names(sal) == 'Date')) sal <- sal[, -which(names(sal) == 'Date')]
   if (any(names(sal) == 'Day')) sal <- sal[, -which(names(sal) == 'Day')]

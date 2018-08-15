@@ -28,11 +28,19 @@ CSIimport_daily <- function (file) {
     stop("File must be a CSV with columns 'Year', 'Month', and 'Day', or single column 'Date' = 'YYYY-MM-DD', and columns of salinity values for each site")
   Year <- Month <- 'dplyr'
   if (any(names(sal) %in% c('Date', 'date', 'DATE'))) {
+    dt <- which(names(sal) %in% c('Date', 'date', 'DATE'))
+    names(sal)[dt] <- 'Date'
     sal$Date <- as.Date(sal$Date)
     sal$Month <- as.numeric(format(sal$Date, format = "%m"))
     sal$Year <- format(sal$Date, format = "%Y")
     sal <- sal[, -which(names(sal) == 'Date')]
   }
+  yr <- which(names(sal) %in% c('Year', 'year', 'YEAR'))
+  names(sal)[yr] <- 'Year'
+  mo <- which(names(sal) %in% c('Month', 'month', 'MONTH'))
+  names(sal)[mo] <- 'Month'
+  dy <- which(names(sal) %in% c('Day', 'day', 'DAY'))
+  names(sal)[dy] <- 'Day'
   sal <- group_by(sal, Year, Month)
   if (any(names(sal) == 'Day')) sal <- sal[, -which(names(sal) == 'Day')]
   sal <- summarize_all(sal, mean, na.rm = T)
