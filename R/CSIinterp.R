@@ -53,7 +53,7 @@ CSIinterp <- function (sal_na, limit = 6, method = "linear") {
     }
   }
   names(sal) <- names(sal_na)
-  attr(sal, "filled_gaps") <- filled_gaps_attr
+  attr(sal, "filled_gaps") <- filled_gaps_attr[-1]
   attr(sal, "interpolation_method") <- method
 
   return(sal)

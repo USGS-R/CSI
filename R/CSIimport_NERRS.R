@@ -14,8 +14,8 @@
 #' @examples
 #' # NERRS-format data file
 #' data_path <- system.file("extdata", "NIWDCWQ.csv.zip", package="CSI")
-#' #unzip(data_path, exdir = getwd())
-#' #sal <- CSIimport_NERRS("NIWDCWQ.csv")
+#' unzip(data_path, exdir = getwd())
+#' sal <- CSIimport_NERRS("NIWDCWQ.csv")
 #'
 CSIimport_NERRS <- function (file) {
   if (!(length(file) == 1) || !is.character(file))
