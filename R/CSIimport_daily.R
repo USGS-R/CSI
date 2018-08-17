@@ -51,6 +51,7 @@ CSIimport_daily <- function (file) {
   rng$Month <- as.numeric(format(rng$Date, format = "%m"))
   rng <- rng[, -which(names(rng) == "Date")]
   sal <- merge(rng, sal, all.x = T)
+  sal <- sal[order(sal$Year, sal$Month), ]
 
   return(sal)
 }
