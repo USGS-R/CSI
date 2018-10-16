@@ -39,10 +39,11 @@ CSIinterp <- function (sal_na, limit = 6, method = "linear") {
       unfilled_num <- sum(runs$lengths > limit & runs$values == T)
       filled_gaps <- which(runs$lengths <= limit & runs$values == T)
       s <- t <- NULL
-      for (i in 1:length(filled_gaps)) {
-        t[i] <- paste(sal_na[first_meas + sum(runs$lengths[1:(filled_gaps[i] - 1)]), 1:2], collapse = "-")
-        s[i] <- runs$lengths[filled_gaps[i]]
-      }
+      if (length(filled_gaps))
+        for (i in 1:length(filled_gaps)) {
+          t[i] <- paste(sal_na[first_meas + sum(runs$lengths[1:(filled_gaps[i] - 1)]), 1:2], collapse = "-")
+          s[i] <- runs$lengths[filled_gaps[i]]
+        }
       filled_gaps_attr[[paste0(names(sal_na)[j + 2], "_filled_gaps")]] <- t
       filled_gaps_attr[[paste0(names(sal_na)[j + 2], "_filled_gaps_len")]] <- s
       message(paste0(names(sal_na)[j + 2], ": ", filled_num, " gaps <= ", limit, " months filled; ", unfilled_num, " gaps > ", limit, " months unfilled"))
