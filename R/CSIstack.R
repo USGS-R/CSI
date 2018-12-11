@@ -109,7 +109,7 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, gr
       leg_lty <- c(NA, NA, NA, NA, NA, NA, NA, NA, NA, 1, 1, 1)
       leg_lwd <- c(NA, NA, NA, NA, NA, NA, NA, NA, NA, 3, 3, 3)
       leg_col <- c(NA, NA, NA, NA, NA, NA, NA, NA, NA, "grey28", "darkgrey", "darkblue")
-      if (!is.null(gaps)) { leg_txt[13:14] <- c("Interpolated rolling average", "Interpolated data"); leg_lty[13:14] <- c(3, 1); leg_lwd[13:14] <- 3; leg_col[13:14] <- c("darkblue", "limegreen") }
+      if (!is.null(gaps)) { leg_txt[13:14] <- c("Interpolated rolling average", "Interpolated data range"); leg_lty[13:14] <- c(3, 1); leg_lwd[13:14] <- 3; leg_col[13:14] <- c("darkblue", "limegreen") }
       tmp <- legend("topleft", leg_txt, lty = leg_lty, lwd = leg_lwd, col = leg_col, inset = c(0.01, 0.01), title = expression(bold("EXPLANATION")))
       text(tmp$rect$left + tmp$rect$w, tmp$text$y[1:2], c("CD, coastal drought; CW, coastal wet", paste0("Period of record: ", sal$Month[fst], "/", sal$Year[fst], " - ", sal$Month[lst], "/", sal$Year[lst])), pos = 2)
       par(usr = c(0, 1, 0, 1))
