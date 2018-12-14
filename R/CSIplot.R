@@ -46,7 +46,7 @@ CSIplot <- function (csi, dir = paste0(getwd(), "/csi_plots"), leg = T) {
       for (k in st:(en - i + 1))
         mwa[k] <- mean(sal[k:(k + i - 1), j + 2], na.rm = T)
       mwa <- c(rep(NA, num_months - length(mwa)), mwa) # pad
-      png(filename = paste0(dir, "/", dimnames(csi)[[3]][j], "_interval", i, ".png"), width = 1724, height = 614, units = "px", pointsize = 12)
+      png(paste0(dir, "/", dimnames(csi)[[3]][j], "_interval", i, ".png"), width = 1724, height = 614)
       par(mar = c(5, 4, 4, 5) + .1)
       plot(xrange, sal[, j + 2], type = "n", ylim = c(0, max), ylab = paste0(i, "-month average salinity (PPT)"), xlab = "Date", main = paste0(dimnames(csi)[[3]][j], " ", i, "-month CSI (background) and ", i, "-month average salinity (black trace)"), xaxt = "n", tck = 0.02, cex.axis = 1.25, cex.lab = 1.25, las = 1)
       for (k in 1:num_months) rect(as.numeric(xrange[k]), 0, as.numeric(xrange[k + 1]), 56, col = csi.cols[bin[k]], border = NA)

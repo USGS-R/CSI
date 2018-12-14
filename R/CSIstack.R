@@ -55,7 +55,7 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, gr
     gaps <- filled_gaps[[paste0(dimnames(csi)[[3]][j], "_filled_gaps")]]
     gaplengths <- filled_gaps[[paste0(dimnames(csi)[[3]][j], "_filled_gaps_len")]]
     if (thumbs) {
-      png(filename = paste0(dir, "/", dimnames(csi)[[3]][j], "_stacked_thumb.png"), width = 360, height = 150, units = "px", pointsize = 2)
+      png(paste0(dir, "/", dimnames(csi)[[3]][j], "_stacked_thumb.png"), width = 360, height = 150, pointsize = 2)
       par(mar = c(0, 0, 0, 0) + .1)
       plot(xrange, sal[, j + 2], type = "n", ylim = c(0, max), ylab = "", xlab = "", main = "", xaxt = "n", yaxt = "n", axes = F, frame.plot = T)
       for (i in 1:24) {
@@ -66,7 +66,7 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, gr
       lines(xrange2, mwa[, j], lwd = 2)
       dev.off()
     }
-    png(filename = paste0(dir, "/", dimnames(csi)[[3]][j], "_stacked.png"), width = 1724, height = 614, units = "px", pointsize = 12)
+    png(paste0(dir, "/", dimnames(csi)[[3]][j], "_stacked.png"), width = 1724, height = 614)
     par(mar = c(5.1, 4.1, 4.1, 4.1))
     plot(xrange, sal[, j + 2], type = "n", ylim = c(0, max), ylab = "Coastal salinity index interval, in months", xlab = "Date", main = paste0(dimnames(csi)[[3]][j], " Coastal Salinity Index With 1- to ", scale, "-Month Interval"), axes = F, frame.plot = T, cex.lab = 1.25)
     for (i in 1:scale) {
