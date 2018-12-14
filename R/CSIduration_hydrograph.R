@@ -15,7 +15,7 @@
 #' @examples
 #' # Data file with Year, Month, and Day columns
 #' data_path <- system.file("extdata", "Daily_Waccamaw_LittleBlack_Rivers.csv", package="CSI")
-#' sal <- CSIimport_monthly(data_path)
+#' sal <- CSIimport_daily(data_path)
 #' CSIduration_hydrograph(sal)
 #'
 CSIduration_hydrograph <- function (sal, dir = paste0(getwd(), "/duration_hydrographs"), thumbs = F, leg = T) {

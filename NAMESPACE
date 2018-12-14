@@ -3,6 +3,8 @@
 export(CSIcalc)
 export(CSIcumper)
 export(CSIdist)
+export(CSIdur_hyd)
+export(CSIduration_hydrograph)
 export(CSIimport)
 export(CSIimport_24hour)
 export(CSIimport_NERRS)

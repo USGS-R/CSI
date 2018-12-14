@@ -6,7 +6,7 @@
 #' @param dir character Directory to write output files to.
 #' @param thumbs logical. If true, thumbnail plots will be generated in addition to full-sized plots.
 #' @param grouped logical. If true, second y-asix (salinity) will be the same across all output plots.
-#' @param leg logical. If true, legend will be displayed in upper left corner.
+#' @param leg character If "topleft" (default), legend will be displayed in upper left corner; if "bottom", legend will be placed horizontally along the figure bottom. Else no legend will be displayed.
 #'
 #' @importFrom grDevices dev.off png
 #' @importFrom graphics axis par plot rect text
@@ -21,7 +21,7 @@
 #' csi <- CSIcalc(sal)
 #' CSIstack(csi)
 #'
-CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, grouped = T, leg = T) {
+CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, grouped = T, leg = "topleft") {
   if (!(length(dir) == 1) || !is.character(dir))
     stop("dir must be a single character string")
   if (!dir.exists(dir)) dir.create(dir)
@@ -66,8 +66,9 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, gr
       lines(xrange2, mwa[, j], lwd = 2)
       dev.off()
     }
-    png(paste0(dir, "/", dimnames(csi)[[3]][j], "_stacked.png"), width = 1724, height = 614)
-    par(mar = c(5.1, 4.1, 4.1, 4.1))
+    if (leg == "bottom") { m <- c(8.1, 4.1, 4.1, 4.1); ht <- 659 } else { m <- c(5.1, 4.1, 4.1, 4.1); ht <- 614 }
+    png(paste0(dir, "/", dimnames(csi)[[3]][j], "_stacked.png"), width = 1724, height = ht)
+    par(mar = m)
     plot(xrange, sal[, j + 2], type = "n", ylim = c(0, max), ylab = "Coastal salinity index interval, in months", xlab = "Date", main = paste0(dimnames(csi)[[3]][j], " Coastal Salinity Index With 1- to ", scale, "-Month Interval"), axes = F, frame.plot = T, cex.lab = 1.25)
     for (i in 1:scale) {
       bin <- cut(unlist(csi[, i, j]), csi.breaks, labels = F)
@@ -102,19 +103,30 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, gr
     axis(4, c(5, 18, 30, 40), c(5, 18, 30, 40), lwd.ticks = 0.5, tck = 0.06, las = 1, cex.axis = 1.25)
     axis(4, 0:50, F, lwd.ticks = 0.5, tck = 0.01)
     mtext("Period of record values and estuarine salinity ranges, in practical salinity units", 4, 2.75, cex = 1.15)
-    if (leg) {
-      fst <- which(!is.na(sal[, j + 2]))[1]
-      lst <- tail(which(!is.na(sal[, j + 2])), 1)
-      leg_txt <- c("", "", "", "", "", "", "", "", "", "Mean", "25th and 75th percentile", "12-month rolling salinity average")
-      leg_lty <- c(NA, NA, NA, NA, NA, NA, NA, NA, NA, 1, 1, 1)
-      leg_lwd <- c(NA, NA, NA, NA, NA, NA, NA, NA, NA, 3, 3, 3)
-      leg_col <- c(NA, NA, NA, NA, NA, NA, NA, NA, NA, "grey28", "darkgrey", "darkblue")
-      if (!is.null(gaps)) { leg_txt[13:14] <- c("Interpolated rolling average", "Interpolated data range"); leg_lty[13:14] <- c(3, 1); leg_lwd[13:14] <- 3; leg_col[13:14] <- c("darkblue", "limegreen") }
-      tmp <- legend("topleft", leg_txt, lty = leg_lty, lwd = leg_lwd, col = leg_col, inset = c(0.01, 0.01), title = expression(bold("EXPLANATION")))
-      text(tmp$rect$left + tmp$rect$w, tmp$text$y[1:2], c("CD, coastal drought; CW, coastal wet", paste0("Period of record: ", sal$Month[fst], "/", sal$Year[fst], " - ", sal$Month[lst], "/", sal$Year[lst])), pos = 2)
+    fst <- which(!is.na(sal[, j + 2]))[1]
+    lst <- tail(which(!is.na(sal[, j + 2])), 1)
+    leg_txt <- c("", "", "", "", "", "", "", "", "", "Mean", "25th and 75th percentile", "12-month rolling salinity average")
+    leg_lty <- c(NA, NA, NA, NA, NA, NA, NA, NA, NA, 1, 1, 1)
+    leg_lwd <- c(NA, NA, NA, NA, NA, NA, NA, NA, NA, 3, 3, 3)
+    leg_col <- c(NA, NA, NA, NA, NA, NA, NA, NA, NA, "grey28", "darkgrey", "darkblue")
+    leb_col2 <- c(csi.cols[1:6], "gray25", rev(csi.cols[7:11]))
+    leg_exp <- c("CD, coastal drought; CW, coastal wet", paste0("Period of record: ", sal$Month[fst], "/", sal$Year[fst], " - ", sal$Month[lst], "/", sal$Year[lst]))
+    leg_txt2 <- c("CD4", "CD3", "CD2", "CD1", "CD0", "Normal", "Missing", "CW4", "CW3", "CW2", "CW1", "CW0")
+    if (!is.null(gaps)) { leg_txt[13:14] <- c("Interpolated rolling average", "Interpolated data range"); leg_lty[13:14] <- c(3, 1); leg_lwd[13:14] <- 3; leg_col[13:14] <- c("darkblue", "limegreen") }
+    if (leg == "bottom") {
+      par(xpd = T)
+      legend("bottomleft", leg_exp, inset = c(0.05, -0.2), title = expression(bold("EXPLANATION")), bty = "n")
+      legend("bottomleft", leg_txt[-(1:9)], lty = leg_lty[-(1:9)], lwd = leg_lwd[-(1:9)], col = leg_col[-(1:9)], inset = c(0.3, -0.18), bty = "n")
       par(usr = c(0, 1, 0, 1))
-      rect(c(0.028, 0.028, 0.028, 0.028, 0.028, 0.053, 0.053, 0.091, 0.091, 0.091, 0.091, 0.091), c(0.834, 0.796, 0.758, 0.720, 0.682, 0.682, 0.834, 0.834, 0.796, 0.758, 0.720, 0.682), c(0.048, 0.048, 0.048, 0.048, 0.048, 0.086, 0.086, 0.111, 0.111, 0.111, 0.111, 0.111), c(0.866, 0.828, 0.790, 0.752, 0.714, 0.714, 0.866, 0.866, 0.828, 0.790, 0.752, 0.714), lwd = 2, col = c(csi.cols[1:6], "gray25", rev(csi.cols[7:11])))
-      text(c(0.038, 0.038, 0.038, 0.038, 0.038, 0.070, 0.070, 0.101, 0.101, 0.101, 0.101, 0.101), c(0.850, 0.812, 0.774, 0.736, 0.698, 0.698, 0.850, 0.850, 0.812, 0.774, 0.736, 0.698), c("CD4", "CD3", "CD2", "CD1", "CD0", "Normal", "Missing", "CW4", "CW3", "CW2", "CW1", "CW0"), col = c(rep("black", 6), "white", rep("black", 5)))
+      rect(c(0.7, 0.7, 0.7, 0.75, 0.75, 0.75, 0.8, 0.8, 0.8, 0.85, 0.85, 0.85), c(-0.075, -0.125, -0.175, -0.075, -0.125, -0.175, -0.075, -0.125, -0.175, -0.075, -0.125, -0.175), c(0.72, 0.72, 0.72, 0.77, 0.77, 0.78, 0.83, 0.82, 0.82, 0.87, 0.87, 0.87), c(-0.107, -0.157, -0.207, -0.107, -0.157, -0.207, -0.107, -0.157, -0.207, -0.107, -0.157, -0.207), lwd = 2, col = leg_col2)
+      text(c(0.71, 0.71, 0.71, 0.76, 0.76, 0.765, 0.815, 0.81, 0.81, 0.86, 0.86, 0.86), c(-0.091, -0.141, -0.191, -0.091, -0.141, -0.191, -0.091, -0.141, -0.191, -0.091, -0.141, -0.191), leg_txt2, col = c(rep("black", 6), "white", rep("black", 5)))
+    }
+    if (leg == "topleft") {
+      tmp <- legend("topleft", leg_txt, lty = leg_lty, lwd = leg_lwd, col = leg_col, inset = c(0.01, 0.01), title = expression(bold("EXPLANATION")))
+      text(tmp$rect$left + tmp$rect$w, tmp$text$y[1:2], leg_exp, pos = 2)
+      par(usr = c(0, 1, 0, 1))
+      rect(c(0.028, 0.028, 0.028, 0.028, 0.028, 0.053, 0.053, 0.091, 0.091, 0.091, 0.091, 0.091), c(0.834, 0.796, 0.758, 0.720, 0.682, 0.682, 0.834, 0.834, 0.796, 0.758, 0.720, 0.682), c(0.048, 0.048, 0.048, 0.048, 0.048, 0.086, 0.086, 0.111, 0.111, 0.111, 0.111, 0.111), c(0.866, 0.828, 0.790, 0.752, 0.714, 0.714, 0.866, 0.866, 0.828, 0.790, 0.752, 0.714), lwd = 2, col = leg_col2)
+      text(c(0.038, 0.038, 0.038, 0.038, 0.038, 0.070, 0.070, 0.101, 0.101, 0.101, 0.101, 0.101), c(0.850, 0.812, 0.774, 0.736, 0.698, 0.698, 0.850, 0.850, 0.812, 0.774, 0.736, 0.698), leg_txt2, col = c(rep("black", 6), "white", rep("black", 5)))
     }
     dev.off()
   }
