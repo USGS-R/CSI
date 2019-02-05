@@ -33,7 +33,7 @@ CSIdist <- function (csi, dir = paste0(getwd(), "/csi_dist")) {
       t <- t[!is.na(t)]
       mn <- paste0(dimnames(csi)[[3]][i], " ", j, "-Month Coastal Salinity Index Distribution")
       if (attr(csi, "lmode")) mn <- paste(mn, "(using L moments)")
-      png(filename = paste0(dir, "/", dimnames(csi)[[3]][i], "_dist_", j, ".png"), width = 1150, height = 614, units = "px", pointsize = 12)
+      png(paste0(dir, "/", dimnames(csi)[[3]][i], "_dist_", j, ".png"), width = 1150, height = 614)
       par(mar = c(5.1, 4.1, 4.1, 4.1))
       h <- hist(t, breaks = 40, density = 30, col = "gray20", xlim = c(-3, 3), xlab = "Coastal salinity index", ylab = "Frequency", main = mn, cex.lab = 1.25, cex.axis = 1.25, tck = 0.02)
       xfit <- seq(min(t), max(t), length = 40)

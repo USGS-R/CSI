@@ -29,14 +29,27 @@ CSIimport_NERRS <- function (file) {
   sal <- sal[, c("DateTimeStamp", "Sal")]
   names(sal) <- c("Timestamp", trimws(as.character(stn)))
 
-  Year <- Month <- 'dplyr'
+  Year <- Month <- Day <- 'dplyr'
   sal$Date <- as.Date(sal$Timestamp, "%m/%d/%Y")
-  sal$Month <- as.numeric(format(sal$Date, format = "%m"))
   sal$Year <- format(sal$Date, format = "%Y")
+  sal$Month <- as.numeric(format(sal$Date, format = "%m"))
+  sal$Day <- as.numeric(format(sal$Date, format = "%d"))
   sal <- sal[, -which(names(sal) == 'Timestamp')]
-
-  sal <- group_by(sal, Year, Month)
   sal <- sal[, -which(names(sal) == 'Date')]
+
+  sal_daily <- group_by(sal, Year, Month, Day)
+  sal_daily <- summarize_all(sal_daily, mean, na.rm = T)
+  sal_daily <- as.data.frame(sal_daily)
+  sal_daily <- sal_daily[, c(which(names(sal_daily) %in% c("Year", "Month", "Day")), which(!names(sal_daily) %in% c("Year", "Month", "Day")))]
+  # Find missing days and enter empty rows
+  rng <- data.frame(Date = seq.Date(as.Date(paste(sal_daily$Year[1], sal_daily$Month[1], sal_daily$Day[1], sep = "-")), as.Date(paste(rev(sal_daily$Year)[1], rev(sal_daily$Month)[1], rev(sal_daily$Day)[1] , sep = "-")), by = "day"))
+  rng$Year <- format(rng$Date, format = "%Y")
+  rng$Month <- as.numeric(format(rng$Date, format = "%m"))
+  rng$Day <- as.numeric(format(rng$Date, format = "%d"))
+  rng <- rng[, -which(names(rng) == "Date")]
+  sal_daily <- merge(rng, sal_daily, all.x = T)
+  sal_daily <- sal_daily[order(sal_daily$Year, sal_daily$Month, sal_daily$Day), ]
+  sal <- group_by(sal, Year, Month)
   sal <- summarize_all(sal, mean, na.rm = T)
   sal <- as.data.frame(sal)
   # Find missing months and enter empty rows
@@ -46,6 +59,7 @@ CSIimport_NERRS <- function (file) {
   rng <- rng[, -which(names(rng) == "Date")]
   sal <- merge(rng, sal, all.x = T)
   sal <- sal[order(sal$Year, sal$Month), ]
+  attr(sal, "daily_data") <- sal_daily
 
   return(sal)
 }

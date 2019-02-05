@@ -34,7 +34,7 @@ CSIcumper <- function (csi, dir = paste0(getwd(), "/csi_cumper")) {
       s <- ecdf(t)
       mn <- paste0(dimnames(csi)[[3]][i], " ", j, "-Month Coastal Salinity Index Cumulative Percentage")
       if (attr(csi, "lmode")) mn <- paste(mn, "(using L moments)")
-      png(filename = paste0(dir, "/", dimnames(csi)[[3]][i], "_cumper_", j, ".png"), width = 1150, height = 614, units = "px", pointsize = 12)
+      png(paste0(dir, "/", dimnames(csi)[[3]][i], "_cumper_", j, ".png"), width = 1150, height = 614)
       par(mar = c(5.1, 4.1, 4.1, 4.1))
       plot(s, pch = NA, xlim = c(-3, 3), ylab = "Cumulative percentage", yaxt = "n", xlab = "Coastal salinity index", main = mn, cex.lab = 1.25, cex.axis = 1.25, tck = 0.02)
       axis(2, seq(0, 1, 0.2), c("0%", "20%", "40%", "60%", "80%", "100%"), tck = 0.02, las = 1)
