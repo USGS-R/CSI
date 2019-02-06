@@ -80,7 +80,7 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, gr
       for (i in 1:length(gaps)) {
         st <- as.Date(paste0(gaps[i], "-01"))
         en <- seq(st, by = paste(gaplengths[i], "month"), length = 2)[2]
-        rect(as.numeric(st), 1 * int_ht - int_ht, as.numeric(en), 1 * int_ht, border = "limegreen", lwd = 3)
+        lines(as.numeric(st):as.numeric(en), rep(-0.0005, length(as.numeric(st):as.numeric(en))), col = "red", lwd = 3)
         tmp <- which(xrange == st):(which(xrange == en) - 1)
         rm <- c(rm, tmp)
         mwa_r <- c(mwa_r, mwa[(tmp[1] - 1):(rev(tmp)[1] + 1), j], NA)
@@ -110,16 +110,17 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, gr
     leg_lwd <- c(NA, NA, NA, NA, NA, NA, NA, NA, NA, 3, 3, 3)
     leg_col <- c(NA, NA, NA, NA, NA, NA, NA, NA, NA, "grey28", "darkgrey", "darkblue")
     leg_col2 <- c(csi.cols[1:6], "gray25", rev(csi.cols[7:11]))
-    leg_exp <- c("CD, coastal drought; CW, coastal wet", paste0("Period of record: ", sal$Month[fst], "/", sal$Year[fst], " - ", sal$Month[lst], "/", sal$Year[lst]))
     leg_txt2 <- c("CD4", "CD3", "CD2", "CD1", "CD0", "Normal", "Missing", "CW4", "CW3", "CW2", "CW1", "CW0")
-    if (!is.null(gaps)) { leg_txt[13:14] <- c("Interpolated rolling average", "Interpolated data range"); leg_lty[13:14] <- c(3, 1); leg_lwd[13:14] <- 3; leg_col[13:14] <- c("darkblue", "limegreen") }
+    if (!is.null(gaps)) { leg_txt[13:14] <- c("Interpolated rolling average", "Interpolated data range"); leg_lty[13:14] <- c(3, 1); leg_lwd[13:14] <- 3; leg_col[13:14] <- c("darkblue", "red") }
     if (leg == "bottom") {
       par(xpd = T)
-      legend("bottomleft", leg_exp, inset = c(0.05, -0.2), title = expression(bold("EXPLANATION")), bty = "n")
-      legend("bottomleft", leg_txt[-(1:9)], lty = leg_lty[-(1:9)], lwd = leg_lwd[-(1:9)], col = leg_col[-(1:9)], inset = c(0.3, -0.18), bty = "n")
       par(usr = c(0, 1, 0, 1))
-      rect(c(0.7, 0.7, 0.7, 0.75, 0.75, 0.75, 0.8, 0.8, 0.8, 0.85, 0.85, 0.85), c(-0.075, -0.125, -0.175, -0.075, -0.125, -0.175, -0.075, -0.125, -0.175, -0.075, -0.125, -0.175), c(0.72, 0.72, 0.72, 0.77, 0.77, 0.78, 0.83, 0.82, 0.82, 0.87, 0.87, 0.87), c(-0.107, -0.157, -0.207, -0.107, -0.157, -0.207, -0.107, -0.157, -0.207, -0.107, -0.157, -0.207), lwd = 2, col = leg_col2)
-      text(c(0.71, 0.71, 0.71, 0.76, 0.76, 0.765, 0.815, 0.81, 0.81, 0.86, 0.86, 0.86), c(-0.091, -0.141, -0.191, -0.091, -0.141, -0.191, -0.091, -0.141, -0.191, -0.091, -0.141, -0.191), leg_txt2, col = c(rep("black", 6), "white", rep("black", 5)))
+      text(0.53, -0.1, "EXPLANATION: ", font = 2, pos = 4)
+      text(0.59, -0.1, paste0("CD, coastal drought; CW, coastal wet; Period of record: ", sal$Month[fst], "/", sal$Year[fst], " - ", sal$Month[lst], "/", sal$Year[lst]), pos = 4)
+      text(0.6, -0.14, paste(leg_txt[-(1:9)], collapse = "      "), pos = 4)
+      segments(c(0.59, 0.624, 0.717, 0.84, 0.94), -0.14, c(0.60, 0.634, 0.727, 0.85, 0.95), -0.14, lty = leg_lty[-(1:9)], lwd = 3, col = leg_col[-(1:9)])
+      rect(c(0.59, 0.62, 0.65, 0.68, 0.71, 0.74, 0.93, 0.77, 0.8, 0.83, 0.86, 0.89), c(-0.17, -0.17, -0.17, -0.17, -0.17, -0.17, -0.17, -0.17, -0.17, -0.17, -0.17, -0.17), c(0.62, 0.65, 0.68, 0.71, 0.74, 0.77, 0.96, 0.80, 0.83, 0.86, 0.89, 0.92), c(-0.202, -0.202, -0.202, -0.202, -0.202, -0.202, -0.202, -0.202, -0.202, -0.202, -0.202, -0.202), lwd = 2, col = leg_col2[c(1:7, 12:8)])
+      text(c(0.605, 0.635, 0.665, 0.695, 0.725, 0.755, 0.945, 0.785, 0.815, 0.845, 0.875, 0.905), c(-0.186, -0.186, -0.186, -0.186, -0.186, -0.186, -0.186, -0.186, -0.186, -0.186, -0.186, -0.186), leg_txt2[c(1:7, 12:8)], col = c(rep("black", 6), "white", rep("black", 5)))
     }
     if (leg == "topleft") {
       tmp <- legend("topleft", leg_txt, lty = leg_lty, lwd = leg_lwd, col = leg_col, inset = c(0.01, 0.01), title = expression(bold("EXPLANATION")))
