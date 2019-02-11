@@ -112,14 +112,16 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, gr
     leg_col2 <- c(csi.cols[1:6], "gray25", rev(csi.cols[7:11]))
     leg_exp <- c("CD, coastal drought; CW, coastal wet", paste0("Period of record: ", sal$Month[fst], "/", sal$Year[fst], " - ", sal$Month[lst], "/", sal$Year[lst]))
     leg_txt2 <- c("CD4", "CD3", "CD2", "CD1", "CD0", "Normal", "Missing", "CW4", "CW3", "CW2", "CW1", "CW0")
-    if (!is.null(gaps)) { leg_txt[13:14] <- c("Interpolated rolling average", "Interpolated data range"); leg_lty[13:14] <- c(3, 1); leg_lwd[13:14] <- 3; leg_col[13:14] <- c("darkblue", "red") }
+    seg_b <- c(0.59, 0.624, 0.717)
+    seg_e <- c(0.60, 0.634, 0.727)
+    if (!is.null(gaps)) { leg_txt[13:14] <- c("Interpolated rolling average", "Interpolated data range"); leg_lty[13:14] <- c(3, 1); leg_lwd[13:14] <- 3; leg_col[13:14] <- c("darkblue", "red"); seg_b <- c(seg_b, 0.84, 0.94); seg_e <- c(seb_e, 0.85, 0.95) }
     if (leg == "bottom") {
       par(xpd = T)
       par(usr = c(0, 1, 0, 1))
-      text(0.53, -0.1, "EXPLANATION: ", font = 2, pos = 4)
-      text(0.59, -0.1, paste0("CD, coastal drought; CW, coastal wet; Period of record: ", sal$Month[fst], "/", sal$Year[fst], " - ", sal$Month[lst], "/", sal$Year[lst]), pos = 4)
+      text(0.58, -0.1, "EXPLANATION: ", font = 2, pos = 4)
+      text(0.64, -0.1, paste0("CD, coastal drought; CW, coastal wet; Period of record: ", sal$Month[fst], "/", sal$Year[fst], " - ", sal$Month[lst], "/", sal$Year[lst]), pos = 4)
       text(0.6, -0.14, paste(leg_txt[-(1:9)], collapse = "      "), pos = 4)
-      segments(c(0.59, 0.624, 0.717, 0.84, 0.94), -0.14, c(0.60, 0.634, 0.727, 0.85, 0.95), -0.14, lty = leg_lty[-(1:9)], lwd = 3, col = leg_col[-(1:9)])
+      segments(seg_b, -0.14, seg_e, -0.14, lty = leg_lty[-(1:9)], lwd = 3, col = leg_col[-(1:9)])
       rect(c(0.59, 0.62, 0.65, 0.68, 0.71, 0.74, 0.93, 0.77, 0.8, 0.83, 0.86, 0.89), c(-0.17, -0.17, -0.17, -0.17, -0.17, -0.17, -0.17, -0.17, -0.17, -0.17, -0.17, -0.17), c(0.62, 0.65, 0.68, 0.71, 0.74, 0.77, 0.96, 0.80, 0.83, 0.86, 0.89, 0.92), c(-0.202, -0.202, -0.202, -0.202, -0.202, -0.202, -0.202, -0.202, -0.202, -0.202, -0.202, -0.202), lwd = 2, col = leg_col2[c(1:7, 12:8)])
       text(c(0.605, 0.635, 0.665, 0.695, 0.725, 0.755, 0.945, 0.785, 0.815, 0.845, 0.875, 0.905), c(-0.186, -0.186, -0.186, -0.186, -0.186, -0.186, -0.186, -0.186, -0.186, -0.186, -0.186, -0.186), leg_txt2[c(1:7, 12:8)], col = c(rep("black", 6), "white", rep("black", 5)))
     }
