@@ -114,7 +114,7 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, gr
     leg_txt2 <- c("CD4", "CD3", "CD2", "CD1", "CD0", "Normal", "Missing", "CW4", "CW3", "CW2", "CW1", "CW0")
     seg_b <- c(0.59, 0.624, 0.717)
     seg_e <- c(0.60, 0.634, 0.727)
-    if (!is.null(gaps)) { leg_txt[13:14] <- c("Interpolated rolling average", "Interpolated data range"); leg_lty[13:14] <- c(3, 1); leg_lwd[13:14] <- 3; leg_col[13:14] <- c("darkblue", "red"); seg_b <- c(seg_b, 0.84, 0.94); seg_e <- c(seb_e, 0.85, 0.95) }
+    if (!is.null(gaps)) { leg_txt[13:14] <- c("Interpolated rolling average", "Interpolated data range"); leg_lty[13:14] <- c(3, 1); leg_lwd[13:14] <- 3; leg_col[13:14] <- c("darkblue", "red"); seg_b <- c(seg_b, 0.84, 0.94); seg_e <- c(seg_e, 0.85, 0.95) }
     if (leg == "bottom") {
       par(xpd = T)
       par(usr = c(0, 1, 0, 1))
