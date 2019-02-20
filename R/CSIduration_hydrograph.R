@@ -61,7 +61,7 @@ CSIduration_hydrograph <- function (sal, dir = paste0(getwd(), "/duration_hydrog
     lines(win30, lwd = 5, col = "black")
     if (leg) {
       legend("topright", c("90% to Max.", "75% to 90%", "25% to 75%", "10% to 25%", "Min. to 10%"), fill = col[5:1], cex = 1.5, bty = "n", title = "Salinity bins")
-      legend("topright", c("Salinity 30 day moving window", "Daily salinity values", "Historic monthly mean salinity"), lwd = c(5, 4, 4), col = c("black", "grey", "yellow"), inset = c(.075, 0), cex = 1.5, bty = "n")
+      legend("topright", c("Salinity 30 day moving window", "Daily salinity values", "Historic monthly median salinity"), lwd = c(5, 4, 4), col = c("black", "grey", "yellow"), inset = c(.075, 0), cex = 1.5, bty = "n")
       legend("topleft", paste("Period of record:", xrange[1], "to", rev(xrange)[1]), cex = 1.5, bty = "n")
     }
     dev.off()
