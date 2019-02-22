@@ -33,7 +33,7 @@ CSIupdown <- function (csi, dir = paste0(getwd(), "/csi_updowns")) {
     for (i in 1:scale) {
       png(paste0(dir, "/", dimnames(csi)[[3]][j], "_updown", i, ".png"), width = 1724, height = 614)
       par(mar = c(5, 4, 4, 5) + .1)
-      plot(xrange, csi[, i, j], type = "n", ylim = c(-rnge, rnge), ylab = paste0(i, "-month CSI"), xlab = "Date", main = paste0(dimnames(csi)[[3]][j], " ", i, "-Month Coastal Salinity Index"), xaxt = "n", cex.lab = 1.25, cex.axis = 1.25, tck = 0.02, las = 1)
+      plot(xrange, csi[, i, j], type = "n", ylim = c(-rnge, rnge), ylab = paste0(i, "-month CSI"), xlab = "Date", main = paste0(dimnames(csi)[[3]][j], " ", i, "-Month Coastal Salinity Index Departure from Mean"), xaxt = "n", cex.lab = 1.25, cex.axis = 1.25, tck = 0.02, las = 1)
       axis(1, as.numeric(seq.Date(as.Date(paste0(sal$Year[1], "/1/1")), as.Date(paste0(sal$Year[num_months], "/1/1")), by = "year")), sal$Year[1]:sal$Year[num_months], cex.axis = 1.25, tck = 0.02)
       abline(v = seq.Date(as.Date(paste0(sal$Year[1], "-01-01")), as.Date(paste0(rev(sal$Year)[1], "-01-01")), by = "year"))
       abline(h = 0)
