@@ -24,10 +24,10 @@ CSIimport_NERRS <- function (file) {
   sk <- if (length(grep("^\\*", l1))) 2 else 0
   sal <- read.csv(file, skip = sk)
   names(sal)[1] <- "Station_Code"
-  stn <- sal$Station_Code[1]
-  sal <- sal[sal$Station_Code == stn, ]
+  stn <- trimws(as.character(sal$Station_Code[1]))
+  sal <- sal[trimws(as.character(sal$Station_Code)) == stn, ]
   sal <- sal[, c("DateTimeStamp", "Sal")]
-  names(sal) <- c("Timestamp", trimws(as.character(stn)))
+  names(sal) <- c("Timestamp", stn)
 
   Year <- Month <- Day <- 'dplyr'
   sal$Date <- as.Date(sal$Timestamp, "%m/%d/%Y")
