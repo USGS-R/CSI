@@ -52,6 +52,7 @@ CSIdist <- function (csi, dir = paste0(getwd(), "/csi_dist")) {
       rect(2, 0, 1000, 1000, col = csi.cols[11])
       plot(h, add = T)
       lines(xfit, yfit, lwd = 3)
+      axis(1, -2.5:2.5, F, tck = 0.01)
       dev.off()
     }
 }

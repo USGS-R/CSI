@@ -55,6 +55,7 @@ CSIcumper <- function (csi, dir = paste0(getwd(), "/csi_cumper")) {
       legend("topleft", c(paste0(j, "-month CSI"), "Threshold points"), lty = c(1, NA), lwd = c(3, NA), pch = c(NA, 16), cex = 1.25, inset = c(0.01, 0.05))
       text(c(-2.6, -1.8, -1.45, -1.05, -0.675, 0, 0.675, 1.05, 1.45, 1.8, 2.6), 1.02, c("CD4", "CD3", "CD2", "CD1", "CD0", "Normal", "CW0", "CW1", "CW2", "CW3", "CW4"), font = 2, cex = 1.25)
       legend("bottomright", paste("Percentage < 0: ", round(s(0), 2)), cex = 1.25, inset = c(0.01, 0.05))
+      axis(1, -2.5:2.5, F, tck = 0.01)
       dev.off()
     }
   }
