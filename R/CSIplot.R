@@ -30,7 +30,6 @@ CSIplot <- function (csi, dir = paste0(getwd(), "/csi_plots"), leg = "topleft") 
   xrange2 <- xrange + 15 # Offset to plot midmonth
   sal <- attr(csi, "sal")
   filled_gaps <- attr(csi, "filled_gaps")
-  max <- ceiling(max(sal[, 3:dim(sal)[2]], na.rm = T))
   num_sites <- dim(csi)[3]
   num_months <- dim(csi)[1]
   scale <- dim(csi)[2]
@@ -38,6 +37,7 @@ CSIplot <- function (csi, dir = paste0(getwd(), "/csi_plots"), leg = "topleft") 
   for (j in 1:num_sites) {
     gaps <- filled_gaps[[paste0(dimnames(csi)[[3]][j], "_filled_gaps")]]
     gaplengths <- filled_gaps[[paste0(dimnames(csi)[[3]][j], "_filled_gaps_len")]]
+    max <- ceiling(max(sal[, j + 2], na.rm = T))
     for (i in 1:scale) {
       bin <- cut(unlist(csi[, i, j]), csi.breaks, labels = F)
       st <- which(!is.na(sal[, j + 2]))[1]
@@ -56,15 +56,10 @@ CSIplot <- function (csi, dir = paste0(getwd(), "/csi_plots"), leg = "topleft") 
         for (k in 1:length(gaps)) {
           st <- as.Date(paste0(gaps[k], "-01"))
           en <- seq(st, by = paste(gaplengths[k], "month"), length = 2)[2]
-          rect(st, 0, en, max * 1.035, border = "limegreen", lwd = 3)
+          rect(st, 0, en, 56, border = "limegreen", lwd = 3)
         }
       axis(1, as.numeric(seq.Date(as.Date(paste0(sal$Year[1], "/1/1")), as.Date(paste0(sal$Year[num_months], "/1/1")), by = "year")), sal$Year[1]:sal$Year[num_months], tck = 0.02, cex.axis = 1.25)
-      #    par(new=T) # Optional 1-month interval line. To remove, comment out from this line...
-      #    plot(xrange,csi[,1,j],type="l",ylim=range(csi,na.rm=T),xaxt="n",yaxt="n",xlab="",ylab="",lwd=3,col="dodgerblue")
-      #    axis(4)
-      #    mtext("One month interval CSI",side=4,line=3) # ...to this line.
-      par(new = T)
-      plot(xrange2, mwa, lwd = 3, type = "l", ylim = range(sal[, j + 2], na.rm = T), xaxt = "n", yaxt = "n", xlab = "", ylab = "")
+      lines(xrange2, mwa, lwd = 3, type = "l", ylim = c(0, max))
       fst <- which(!is.na(sal[, j + 2]))[1]
       lst <- tail(which(!is.na(sal[, j + 2])), 1)
       leg_txt <- c("", "", "", "", "", "", "", "", "", paste0(i, "-month rolling salinity average"))
