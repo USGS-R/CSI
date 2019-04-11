@@ -7,7 +7,7 @@
 CSIspec_con(sc)
 }
 \arguments{
-\item{sc}{data.frame with Year and Month timestamp columns (e.g., produced by CSIimport_ family functions), with columns of site specific conductance values.}
+\item{sc}{data.frame with Year and Month timestamp columns (e.g., produced by CSIimport_ family functions), with columns of site specific conductance values given in microsiemens per centimeter at 25 degrees Celsius (μS/cm at 25C).}
 }
 \value{
 A salinity object data.frame for calculating CSI values; has Year and Month timestamp columns, with (optionally multiple) individual columns of site salinity values.
