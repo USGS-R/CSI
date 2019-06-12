@@ -9,7 +9,7 @@
 #' @param leg character If "topleft" (default), legend will be displayed in upper left corner; if "bottom", legend will be placed horizontally along the figure bottom. Else no legend will be displayed.
 #'
 #' @importFrom grDevices dev.off png
-#' @importFrom graphics axis par plot rect text
+#' @importFrom graphics axis par plot rect text segments
 #' @importFrom utils tail
 #'
 #' @export
@@ -100,8 +100,12 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, gr
     rect(as.numeric(xrange[num_months] + 150), 30, as.numeric(xrange[num_months]) + 5000, 40, col = "cyan4", border = NA)
     rect(as.numeric(xrange[num_months] + 150), 40, as.numeric(xrange[num_months]) + 5000, 80, col = "deepskyblue4", border = NA)
     axis(4, c(olig_p, 6, 19, 31, 41), c(olig, meso, poly, eu, hyper), tick = F, padj = -4.5, hadj = 0, font = 2)
-    axis(4, c(5, 18, 30, 40), c(5, 18, 30, 40), lwd.ticks = 0.5, tck = 0.06, las = 1, cex.axis = 1.25)
+    axis(4, c(5, 18, 30, 40), lwd.ticks = 0.5, tck = 0.06, las = 1, cex.axis = 1.25)
     axis(4, 0:50, F, lwd.ticks = 0.5, tck = 0.01)
+    if (max < 5) {
+      axis(4, 1:4, lwd.ticks = 0.5, tck = 0.06, las = 1, cex.axis = 1.25)
+      axis(4, seq(0, 4.75, 0.25), F, lwd.ticks = 0.5, tck = 0.01)
+    }
     mtext("Period of record values and estuarine salinity ranges, in practical salinity units", 4, 2.75, cex = 1.15)
     fst <- which(!is.na(sal[, j + 2]))[1]
     lst <- tail(which(!is.na(sal[, j + 2])), 1)
