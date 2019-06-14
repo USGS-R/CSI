@@ -7,7 +7,7 @@
 #' @param leg character If "topleft" (default), legend will be displayed in upper left corner; if "bottom", legend will be placed horizontally along the figure bottom. Else no legend will be displayed.
 #'
 #' @importFrom grDevices dev.off png
-#' @importFrom graphics axis par plot rect abline legend lines mtext
+#' @importFrom graphics axis par plot rect abline legend lines mtext segments
 #' @importFrom stats quantile
 #' @importFrom utils tail
 #'
