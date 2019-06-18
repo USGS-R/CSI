@@ -106,6 +106,8 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, gr
       axis(4, 1:4, lwd.ticks = 0.5, tck = 0.06, las = 1, cex.axis = 1.25)
       axis(4, seq(0, 4.75, 0.25), F, lwd.ticks = 0.5, tck = 0.01)
     }
+    if (max < 1)
+      axis(4, seq(0, 0.95, 0.05), F, lwd.ticks = 0.5, tck = 0.01)
     mtext("Period of record values and estuarine salinity ranges, in practical salinity units", 4, 2.75, cex = 1.15)
     fst <- which(!is.na(sal[, j + 2]))[1]
     lst <- tail(which(!is.na(sal[, j + 2])), 1)
