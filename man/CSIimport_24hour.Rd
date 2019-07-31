@@ -4,10 +4,12 @@
 \alias{CSIimport_24hour}
 \title{Import daily-value files for CSI calculation}
 \usage{
-CSIimport_24hour(file)
+CSIimport_24hour(file, mindays = 15)
 }
 \arguments{
 \item{file}{character The daily-value file to import. Must have Year, Month, and Day columns, or single column Date = 'YYYY-MM-DD', and columns of salinty values by site.}
+
+\item{mindays}{integer the minimum number of daily values needed to produce a mean value for a given month (default 15). Months with fewer data values than this will be asigned mean NA.}
 }
 \description{
 Read in daily salinity values file.

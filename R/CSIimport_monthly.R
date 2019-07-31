@@ -25,6 +25,7 @@ CSIimport_monthly <- function (file) {
   sal <- read.csv(file)
   if ((!any(names(sal) %in% c('Year', 'year', 'YEAR')) || !any(names(sal) %in% c('Month', 'month', 'MONTH'))) && !any(names(sal) %in% c('YearMo', 'yearmo', 'YEARMO')))
     stop("File must be a CSV with columns 'Year' and 'Month', or single column 'YearMo' = 'YYYY-MM', and columns for each site.")
+  print("Importing data...")
   Year <- Month <- 'dplyr'
   if (any(names(sal) %in% c('YearMo', 'yearmo', 'YEARMO'))) {
     ym <- which(names(sal) %in% c('YearMo', 'yearmo', 'YEARMO'))

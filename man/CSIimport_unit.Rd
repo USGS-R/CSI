@@ -4,10 +4,12 @@
 \alias{CSIimport_unit}
 \title{Import unit-value files for CSI calculation}
 \usage{
-CSIimport_unit(file)
+CSIimport_unit(file, mindays = 15)
 }
 \arguments{
 \item{file}{character The unit-value file to import. Must have Year, Month, Day, and Time columns, or single Timestamp = 'YYYY-MM-DD HH:mm:ss', and columns of salinty values by site.}
+
+\item{mindays}{integer the minimum number of daily values (any number of values per day) needed to produce a mean value for a given month (default 15). Months with fewer data values than this will be asigned mean NA.}
 }
 \value{
 A salinity object data.frame for calculating CSI values; has Year and Month timestamp columns, with (optionally multiple) individual columns of site salinity values.
