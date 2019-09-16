@@ -2,15 +2,17 @@
 % Please edit documentation in R/CSIimport_unit.R
 \name{CSIimport_interval}
 \alias{CSIimport_interval}
-\title{Import unit-value files for CSI calculation}
+\title{Import interval (less than daily) value files for CSI calculation}
 \usage{
-CSIimport_interval(file)
+CSIimport_interval(file, mindays = 15)
 }
 \arguments{
-\item{file}{character The unit-value file to import. Must have Year, Month, Day, and Time columns, or single Timestamp = 'YYYY-MM-DD HH:mm:ss', and columns of salinty values by site.}
+\item{file}{character The interval-value file to import. Must have Year, Month, Day, and Time columns, or single Timestamp = 'YYYY-MM-DD HH:mm:ss', and columns of salinty values by site.}
+
+\item{mindays}{integer the minimum number of daily values (any number of values per day) needed to produce a mean value for a given month (default 15). Months with fewer data values than this will be asigned mean NA.}
 }
 \description{
-Read in unit value salinity file.
+Read in interval-value salinity file.
 
 Alias of CSIimport_unit.
 }

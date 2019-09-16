@@ -4,10 +4,12 @@
 \alias{CSIimport_NERRS}
 \title{Import NERRS-format unit-value files for CSI calculation}
 \usage{
-CSIimport_NERRS(file)
+CSIimport_NERRS(file, mindays = 15)
 }
 \arguments{
 \item{file}{character The NERRS-format unit-value file to import (either through the Data Graphing and Export System or through the Advanced Query System; see website for reference: http://cdmo.baruch.sc.edu/get/landing.cfm).}
+
+\item{mindays}{integer the minimum number of daily values (any number of values per day) needed to produce a mean value for a given month (default 15). Months with fewer data values than this will be asigned mean NA.}
 }
 \value{
 A salinity object data.frame for calculating CSI values; has Year and Month timestamp columns, with column of site salinity values.

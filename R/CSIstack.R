@@ -3,9 +3,10 @@
 #' @description For each site (layer) in the csi object, plot the intervals (columns) on a stacked plot.
 #'
 #' @param csi array A 3D array of CSI values with dimensions of number of months covered, scale of months analysed (typically 1-24), and number of sites.
-#' @param dir character Directory to write output files to.
-#' @param thumbs logical. If true, thumbnail plots will be generated in addition to full-sized plots.
-#' @param grouped logical. If true, second y-asix (salinity) will be the same across all output plots.
+#' @param dir character Directory to write output files to. Default "csi_stacked" in working directory.
+#' @param thumbs logical. If true, thumbnail plots will be generated in addition to full-sized plots. Default false.
+#' @param groupedx logical. If true (default), x-asix will be the same across all output plots.
+#' @param groupedy logical. If true (default), second y-asix (salinity) will be the same across all output plots.
 #' @param leg character If "topleft" (default), legend will be displayed in upper left corner; if "bottom", legend will be placed horizontally along the figure bottom. Else no legend will be displayed.
 #'
 #' @importFrom grDevices dev.off png
@@ -21,7 +22,7 @@
 #' csi <- CSIcalc(sal)
 #' CSIstack(csi)
 #'
-CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, grouped = T, leg = "topleft") {
+CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, groupedx = T, groupedy = T, leg = "topleft") {
   if (!(length(dir) == 1) || !is.character(dir))
     stop("dir must be a single character string")
   if (!dir.exists(dir)) dir.create(dir)
@@ -43,7 +44,16 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, gr
   }
   mwa <- rbind(array(NA, c(11, num_sites)), mwa)
   for (j in 1:num_sites) {
-    max <- if (grouped) ceiling(max(mwa, na.rm = T)) * 1.1 else max(mwa[, j], na.rm = T) * 1.1
+    if (!groupedx) {
+      csix <- which(!is.na(csi[, 1, j]))[1]:rev(which(!is.na(csi[, 1, j])))[1]
+      xrange <- seq.Date(as.Date(paste(dimnames(csi)[[1]][csix[1]], "01", sep = "-")), as.Date(paste(dimnames(csi)[[1]][rev(csix)[1]], "01" , sep = "-")), by = "month")
+      xrange2 <- xrange + 15 # Offset to plot midmonth
+      mwaj <- mwa[csix, j]
+    } else {
+      csix <- 1:dim(csi)[1]
+      mwaj <- mwa[, j]
+    }
+    max <- if (groupedy) ceiling(max(mwa, na.rm = T)) * 1.1 else max(mwaj, na.rm = T) * 1.1
     scale <- dim(csi)[2]
     int_ht <- max / scale # Height of scale interval for stacked plot
     olig <- if (max > 41) "Olig." else "Oligohaline"
@@ -57,21 +67,21 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, gr
     if (thumbs) {
       png(paste0(dir, "/", dimnames(csi)[[3]][j], "_stacked_thumb.png"), width = 360, height = 150, pointsize = 2)
       par(mar = c(0, 0, 0, 0) + .1)
-      plot(xrange, sal[, j + 2], type = "n", ylim = c(0, max), ylab = "", xlab = "", main = "", xaxt = "n", yaxt = "n", axes = F, frame.plot = T)
+      plot(xrange, mwaj, type = "n", ylim = c(0, max), ylab = "", xlab = "", main = "", xaxt = "n", yaxt = "n", axes = F, frame.plot = T)
       for (i in 1:24) {
-        bin <- cut(unlist(csi[, i, j]), csi.breaks, labels = F)
+        bin <- cut(unlist(csi[csix, i, j]), csi.breaks, labels = F)
         for (k in 1:num_months) rect(as.numeric(xrange[k]), i * int_ht - int_ht, as.numeric(xrange[k + 1]),i * int_ht, col = csi.cols[bin[k]], border = NA)
         for (k in which(!is.na(bin))[1]:rev(which(!is.na(bin)))[1]) if (is.na(bin[k])) rect(as.numeric(xrange[k]), i * int_ht - int_ht, as.numeric(xrange[k + 1]), i * int_ht, col = "gray25", border = NA)
       }
-      lines(xrange2, mwa[, j], lwd = 2)
+      lines(xrange2, mwaj, lwd = 2)
       dev.off()
     }
     if (leg == "bottom") { m <- c(8.1, 4.1, 4.1, 4.1); ht <- 659 } else { m <- c(5.1, 4.1, 4.1, 4.1); ht <- 614 }
     png(paste0(dir, "/", dimnames(csi)[[3]][j], "_stacked.png"), width = 1724, height = ht)
     par(mar = m)
-    plot(xrange, sal[, j + 2], type = "n", ylim = c(0, max), ylab = "Coastal salinity index interval, in months", xlab = "Date", main = paste0(dimnames(csi)[[3]][j], " Coastal Salinity Index With 1- to ", scale, "-Month Interval"), axes = F, frame.plot = T, cex.lab = 1.25)
+    plot(xrange, mwaj, type = "n", ylim = c(0, max), ylab = "Coastal salinity index interval, in months", xlab = "Date", main = paste0(dimnames(csi)[[3]][j], " Coastal Salinity Index With 1- to ", scale, "-Month Interval"), axes = F, frame.plot = T, cex.lab = 1.25)
     for (i in 1:scale) {
-      bin <- cut(unlist(csi[, i, j]), csi.breaks, labels = F)
+      bin <- cut(unlist(csi[csix, i, j]), csi.breaks, labels = F)
       for (k in 1:num_months) rect(as.numeric(xrange[k]), i * int_ht - int_ht, as.numeric(xrange[k + 1]), i * int_ht, col = csi.cols[bin[k]], border = NA)
       for (k in which(!is.na(bin))[1]:rev(which(!is.na(bin)))[1]) if (is.na(bin[k])) rect(as.numeric(xrange[k]), i * int_ht - int_ht, as.numeric(xrange[k + 1]), i * int_ht, col = "gray25", border = NA)
     }
@@ -83,14 +93,14 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, gr
         lines(as.numeric(st):as.numeric(en), rep(-0.0005, length(as.numeric(st):as.numeric(en))), col = "red", lwd = 3)
         tmp <- which(xrange == st):(which(xrange == en) - 1)
         rm <- c(rm, tmp)
-        mwa_r <- c(mwa_r, mwa[(tmp[1] - 1):(rev(tmp)[1] + 1), j], NA)
+        mwa_r <- c(mwa_r, mwaj[(tmp[1] - 1):(rev(tmp)[1] + 1)], NA)
         mwa_rx <- c(mwa_rx, (tmp[1] - 1):(rev(tmp)[1] + 2))
       }
-      mwa[rm, j] <- NA
+      mwaj[rm] <- NA
     }
     abline(h = mean(sal[, j + 2], na.rm = T), lwd = 3, col = "grey28")
     abline(h = quantile(sal[, j + 2], c(.25, .75), na.rm = T), lwd = 3,col = "darkgrey")
-    lines(xrange2, mwa[, j], lwd = 3, col = "darkblue")
+    lines(xrange2, mwaj, lwd = 3, col = "darkblue")
     if (!is.null(gaps)) lines(xrange2[mwa_rx], mwa_r, lwd = 3, lty = 3, col = "darkblue")
     axis(1, as.numeric(seq.Date(as.Date(paste0(sal$Year[1], "/1/1")), as.Date(paste0(sal$Year[num_months], "/1/1")), by = "year")), sal$Year[1]:sal$Year[num_months], tck = 0.02, cex.axis = 1.25)
     axis(2, seq(int_ht / 2, max, int_ht), 1:scale, tck = 0.02, las = 1, cex.axis = 1.25)
@@ -107,7 +117,7 @@ CSIstack <- function (csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F, gr
       axis(4, seq(0, 4.75, 0.25), F, lwd.ticks = 0.5, tck = 0.01)
     }
     if (max < 1)
-      axis(4, seq(0, 0.95, 0.05), F, lwd.ticks = 0.5, tck = 0.01)
+      axis(4, seq(0, 0.95, 0.05), lwd.ticks = 0.5, tck = 0.01)
     mtext("Period of record values and estuarine salinity ranges, in practical salinity units", 4, 2.75, cex = 1.15)
     fst <- which(!is.na(sal[, j + 2]))[1]
     lst <- tail(which(!is.na(sal[, j + 2])), 1)
