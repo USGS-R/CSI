@@ -57,7 +57,7 @@ CSIimport_unit <- function (file, mindays = 15) {
   sal_daily <- as.data.frame(sal_daily)
   sal_daily <- sal_daily[, c(which(names(sal_daily) %in% c("Year", "Month", "Day")), which(!names(sal_daily) %in% c("Year", "Month", "Day")))]
   mo <- seq.Date(as.Date(paste(sal_daily$Year[1], sal_daily$Month[1], "01", sep = "-")), as.Date(paste(rev(sal_daily$Year)[1], rev(sal_daily$Month)[1], "01", sep = "-")), "month")
-  for (i in 3:dim(sal_daily)[2])
+  for (i in 4:dim(sal_daily)[2])
     for (j in 1:length(mo))
       if (length(which(as.Date(paste(sal_daily$Year, sal_daily$Month, "01", sep = "-")) == mo[j] & !is.na(sal_daily[, i]))) < mindays) {
         print(paste(names(sal_daily)[i], substr(mo[j], 1, 7), "less than minimum", mindays, "days - removed"))
