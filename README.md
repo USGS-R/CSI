@@ -9,7 +9,7 @@ Installation instructions
 To install the CSI package, you must be using R 3.0 or greater and run the following command:
 
 ``` r
-devtools::install_github("USGS-EDEN/CSI")
+devtools::install_github("USGS-R/CSI")
 ```
 
 Reporting bugs
