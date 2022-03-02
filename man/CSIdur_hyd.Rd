@@ -4,8 +4,12 @@
 \alias{CSIdur_hyd}
 \title{Create salinity duration hydrograph plots for sites}
 \usage{
-CSIdur_hyd(sal, dir = paste0(getwd(), "/duration_hydrographs"),
-  thumbs = F, leg = T)
+CSIdur_hyd(
+  sal,
+  dir = paste0(getwd(), "/duration_hydrographs"),
+  thumbs = F,
+  leg = T
+)
 }
 \arguments{
 \item{sal}{data.frame salinity object with daily or finer resolution salinity data stored in orig_data attribute. Created by CSIimport_daily, CSIimport_unit, or CSIimport_NERRS functions.}

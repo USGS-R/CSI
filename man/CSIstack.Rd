@@ -4,8 +4,14 @@
 \alias{CSIstack}
 \title{Create stacked CSI interval plots for sites}
 \usage{
-CSIstack(csi, dir = paste0(getwd(), "/csi_stacked"), thumbs = F,
-  groupedx = T, groupedy = T, leg = "topleft")
+CSIstack(
+  csi,
+  dir = paste0(getwd(), "/csi_stacked"),
+  thumbs = F,
+  groupedx = T,
+  groupedy = T,
+  leg = "topleft"
+)
 }
 \arguments{
 \item{csi}{array A 3D array of CSI values with dimensions of number of months covered, scale of months analysed (typically 1-24), and number of sites.}

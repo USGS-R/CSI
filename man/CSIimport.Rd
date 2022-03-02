@@ -4,8 +4,10 @@
 \alias{CSIimport}
 \title{Import salinity value files.}
 \usage{
-CSIimport(file, interval = c("monthly", "daily", "24hour", "interval",
-  "unit", "hourly", "NERRS"))
+CSIimport(
+  file,
+  interval = c("monthly", "daily", "24hour", "interval", "unit", "hourly", "NERRS")
+)
 }
 \arguments{
 \item{file}{character The file to import.}

@@ -4,7 +4,12 @@
 \alias{CSIplot}
 \title{Create individual CSI interval plots for sites}
 \usage{
-CSIplot(csi, dir = paste0(getwd(), "/csi_plots"), leg = "topleft")
+CSIplot(
+  csi,
+  dir = paste0(getwd(), "/csi_plots"),
+  leg = "topleft",
+  groupedx = T
+)
 }
 \arguments{
 \item{csi}{array A 3D array of CSI values with dimensions of number of months covered, scale of months analysed (typically 1-24), and number of sites.}
@@ -12,6 +17,8 @@ CSIplot(csi, dir = paste0(getwd(), "/csi_plots"), leg = "topleft")
 \item{dir}{character Directory to write output files to.}
 
 \item{leg}{character If "topleft" (default), legend will be displayed in upper left corner; if "bottom", legend will be placed horizontally along the figure bottom. Else no legend will be displayed.}
+
+\item{groupedx}{logical. If true (default), x-asix will be the same across all output plots.}
 }
 \description{
 For each site (layer) in the csi object, plot each interval (column).

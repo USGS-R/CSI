@@ -5,6 +5,7 @@
 #' @param csi array A 3D array of CSI values with dimensions of number of months covered, scale of months analysed (typically 1-24), and number of sites.
 #' @param dir character Directory to write output files to.
 #' @param leg character If "topleft" (default), legend will be displayed in upper left corner; if "bottom", legend will be placed horizontally along the figure bottom. Else no legend will be displayed.
+#' @param groupedx logical. If true (default), x-asix will be the same across all output plots.
 #'
 #' @importFrom grDevices dev.off png
 #' @importFrom graphics axis par plot rect abline legend lines mtext segments
@@ -20,14 +21,12 @@
 #' csi <- CSIcalc(sal)
 #' CSIplot(csi)
 #'
-CSIplot <- function (csi, dir = paste0(getwd(), "/csi_plots"), leg = "topleft") {
+CSIplot <- function (csi, dir = paste0(getwd(), "/csi_plots"), leg = "topleft", groupedx = T) {
   if (!(length(dir) == 1) || !is.character(dir))
     stop("dir must be a single character string")
   if (!dir.exists(dir)) dir.create(dir)
   csi.breaks <- c(-1000, -2, -1.6, -1.3, -0.8, -0.5, 0.5, 0.8, 1.3, 1.6, 2, 1000)
   csi.cols <- c("#740200CC", "#E80600CC", "#FFAC00CC", "#FCD57BCC", "#FEFF00CC", "#FDFFE4CC", "#E4E1EACC", "#B6D0E5CC", "#91ABD0CC", "#33648DCC", "#23425FCC")
-  xrange <- seq.Date(as.Date(paste(dimnames(csi)[[1]][1], "01", sep = "-")), as.Date(paste(rev(dimnames(csi)[[1]])[1], "01" , sep = "-")), by = "month")
-  xrange2 <- xrange + 15 # Offset to plot midmonth
   sal <- attr(csi, "sal")
   filled_gaps <- attr(csi, "filled_gaps")
   num_sites <- dim(csi)[3]
@@ -45,11 +44,24 @@ CSIplot <- function (csi, dir = paste0(getwd(), "/csi_plots"), leg = "topleft") 
       mwa <- NULL # Moving-window average of same length as scale
       for (k in st:(en - i + 1))
         mwa[k] <- mean(sal[k:(k + i - 1), j + 2], na.rm = T)
-      mwa <- c(rep(NA, num_months - length(mwa)), mwa) # pad
+      if (groupedx) {
+        mwa <- c(rep(NA, num_months - length(mwa)), mwa) # pad
+        xrange <- seq.Date(as.Date(paste(dimnames(csi)[[1]][1], "01", sep = "-")), as.Date(paste(rev(dimnames(csi)[[1]])[1], "01" , sep = "-")), by = "month")
+        xrange2 <- xrange + 15 # Offset to plot midmonth
+      } else {
+        bin <- bin[which(!is.na(bin))[1]:length(bin)]
+        mwa <- mwa[which(!is.na(mwa))[1]:length(mwa)]
+        xrange <- seq.Date(as.Date(paste(dimnames(csi)[[1]][which(!is.na(csi[, i, j]))[1]], "01", sep = "-")), as.Date(paste(rev(dimnames(csi)[[1]])[1], "01" , sep = "-")), by = "month")
+        xrange2 <- xrange + 15 # Offset to plot midmonth
+      }
       if (leg == "bottom") { m <- c(8.1, 4.1, 4.1, 4.1); ht <- 659 } else { m <- c(5.1, 4.1, 4.1, 4.1); ht <- 614 }
       png(paste0(dir, "/", dimnames(csi)[[3]][j], "_interval", i, ".png"), width = 1724, height = ht)
       par(mar = m)
-      plot(xrange, sal[, j + 2], type = "n", ylim = c(0, max), ylab = paste0(i, "-month average salinity (PPT)"), xlab = "Date", main = paste0(dimnames(csi)[[3]][j], " ", i, "-month CSI (background) and ", i, "-month average salinity (black trace)"), xaxt = "n", tck = 0.02, cex.axis = 1.25, cex.lab = 1.25, las = 1)
+      if (groupedx) {
+        plot(xrange, sal[, j + 2], type = "n", ylim = c(0, max), ylab = paste0(i, "-month average salinity (PPT)"), xlab = "Date", main = paste0(dimnames(csi)[[3]][j], " ", i, "-month CSI (background) and ", i, "-month average salinity (black trace)"), xaxt = "n", tck = 0.02, cex.axis = 1.25, cex.lab = 1.25, las = 1)
+      } else {
+        plot(xrange, sal[which(!is.na(csi[, i, j]))[1]:dim(csi)[1], j + 2], type = "n", ylim = c(0, max), ylab = paste0(i, "-month average salinity (PPT)"), xlab = "Date", main = paste0(dimnames(csi)[[3]][j], " ", i, "-month CSI (background) and ", i, "-month average salinity (black trace)"), xaxt = "n", tck = 0.02, cex.axis = 1.25, cex.lab = 1.25, las = 1)
+      }
       for (k in 1:num_months) rect(as.numeric(xrange[k]), 0, as.numeric(xrange[k + 1]), 56, col = csi.cols[bin[k]], border = NA)
       for (k in which(!is.na(bin))[1]:rev(which(!is.na(bin)))[1]) if (is.na(bin[k])) rect(as.numeric(xrange[k]), 0, as.numeric(xrange[k + 1]), 56, col = "gray25", border = NA)
       if (i == 1 & !is.null(gaps))
