@@ -39,21 +39,21 @@ CSIplot <- function (csi, dir = paste0(getwd(), "/csi_plots"), leg = "topleft", 
     max <- ceiling(max(sal[, j + 2], na.rm = T))
     for (i in 1:scale) {
       bin <- cut(unlist(csi[, i, j]), csi.breaks, labels = F)
-      st <- which(!is.na(sal[, j + 2]))[1]
-      en <- rev(which(!is.na(sal[, j + 2])))[1]
       mwa <- NULL # Moving-window average of same length as scale
-      for (k in st:(en - i + 1))
+      for (k in 1:(length(bin) - i + 1))
         mwa[k] <- mean(sal[k:(k + i - 1), j + 2], na.rm = T)
+      mwa <- c(rep(NA, i - 1), mwa) # pad
+      mwa[0:(which(!is.na(bin))[1] - 1)] <- NA
+      if (rev(which(!is.na(bin)))[1] != length(bin))
+        mwa[(rev(which(!is.na(bin)))[1] + 1):length(bin)] <- NA
       if (groupedx) {
-        mwa <- c(rep(NA, num_months - length(mwa)), mwa) # pad
         xrange <- seq.Date(as.Date(paste(dimnames(csi)[[1]][1], "01", sep = "-")), as.Date(paste(rev(dimnames(csi)[[1]])[1], "01" , sep = "-")), by = "month")
-        xrange2 <- xrange + 15 # Offset to plot midmonth
       } else {
         bin <- bin[which(!is.na(bin))[1]:length(bin)]
         mwa <- mwa[which(!is.na(mwa))[1]:length(mwa)]
         xrange <- seq.Date(as.Date(paste(dimnames(csi)[[1]][which(!is.na(csi[, i, j]))[1]], "01", sep = "-")), as.Date(paste(rev(dimnames(csi)[[1]])[1], "01" , sep = "-")), by = "month")
-        xrange2 <- xrange + 15 # Offset to plot midmonth
       }
+      xrange2 <- xrange + 15 # Offset to plot midmonth
       if (leg == "bottom") { m <- c(8.1, 4.1, 4.1, 4.1); ht <- 659 } else { m <- c(5.1, 4.1, 4.1, 4.1); ht <- 614 }
       png(paste0(dir, "/", dimnames(csi)[[3]][j], "_interval", i, ".png"), width = 1724, height = ht)
       par(mar = m)
